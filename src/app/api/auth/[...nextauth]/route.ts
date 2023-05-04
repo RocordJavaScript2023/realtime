@@ -1,86 +1,110 @@
-import NextAuth from "next-auth";
-import type { NextAuthOptions } from "next-auth";
-import { OAuthConfig } from "next-auth/providers";
-import GitHubProvider, { GithubProfile }  from "next-auth/providers/github";
-import  CredentialsProvider  from "next-auth/providers/credentials";
-import { PrismaAdapter } from "@next-auth/prisma-adapter";
+import NextAuth from "next-auth/next";
+import type { NextAuthOptions, Session } from "next-auth";
+import { prisma } from "@/lib/db/prisma-global";
 
-import { prisma } from '@/lib/db/prisma-global';
-
+// The `CredentialsProvider` Module is used for validation
+import CredentialsProvider, {
+  CredentialInput,
+  CredentialsConfig,
+} from "next-auth/providers/credentials";
+import { User } from "@prisma/client";
+import { compare } from "bcryptjs";
+import { JWT } from "next-auth/jwt/types";
+import { AdapterUser } from "next-auth/adapters";
 
 /**
- * TODO: We need to check if other sign in methods still
- * TODO: work when we are using this sign in method.
- * https://next-auth.js.org/providers/credentials
- * 
- * This `CredentialsProvider` allows us to handle signin 
- * with a local user. Meaning the users signing in with this 
- * Method have to be managed by us.
- * 
- * The Credentials provider is specified like any other next-auth provider.
- * The only exception here is that we need to define a handler function for 
- * `authorize()` that accepts credentials submitted via HTTP POST as input and
- * returns either:
- * 
- * 1. A User object, which indicates the credentials are valid.
- * - If we return an object it will be persisted to the JSON Web Token and the 
- *   user will be signed in, unless a custom signIn() callback is configured that
- *   subsequently rejects it.
- * 
- * 2. If we return `null` then an error will be displayed advising the user to check their
- *    details.
- * 
- * 3. If we throw an Error, the user will be sent to the error page with the error message as the
- *    query parameter.
+ * As Credentials for Authentication,
+ * we'll use a user's email and password.
+ * https://codevoweb.com/setup-and-use-nextauth-in-nextjs-13-app-directory/
  */
-const customProvider = CredentialsProvider({
-    // The name to display on the sign in form (e.g. "Sign in with Local")
-    name: "Local",
-    // `credentials` is used to generate a form on the sign in page.
-    // We can specify which fields should be submitted, by adding keys to the `credentials` object.
-    // For Example: domain, username, password, 2FA token etc.
-    // We can pass any HTML attribute to the <input> tag through the object.
-    credentials: {
-        username: { label: "Username", type: "text", placeholder: "Username"},
-        password: { label: "Password", type: "password" },
+const localCredentialsProvider: CredentialsConfig<
+  Record<string, CredentialInput>
+> = CredentialsProvider({
+  name: "Local Account",
+  credentials: {
+    email: {
+      label: "Email",
+      type: "email",
+      placeholder: "example@example.com",
     },
-    async authorize(credentials, req) {
-        // HERE WE NEED TO ADD OUR OWN LOGIC TO LOOK UP THE USER FROM THE SUPPLIED 
-        // CREDENTIALS!
-        // TODO: Add functional logic.
-        const user = { id: "1", name: "Placeholder_User", email: "placeholder.user@changeme.org" };
-
-        if (user) {
-            // Any object returned will be saved in the `user` property of the JWT
-            return user;
-        } else {
-            // If we return null then an error will be displayed advising the user to check
-            // their details.
-            return null;
-
-            // We could also reject this callback with an Error and the user will be sent to the error page.
-        }
+    password: {
+      label: "Password",
+      type: "password",
+    },
+  },
+  async authorize(credentials) {
+    if (!credentials?.email || !credentials.password) {
+      return null;
     }
-})
-/**
- * 
- */
-const gitHub: OAuthConfig<GithubProfile> = GitHubProvider({
-    clientId: process.env.GITHUB_ID ?? "NO_GITHUB_ID_PROVIDED!",
-    clientSecret: process.env.GITHUB_SECRET ?? "NO_GITHUB_SECRET_PROVIDED!",
+
+    const user: User | null = await prisma.user.findUnique({
+      where: {
+        email: credentials.email,
+      },
+    });
+
+    if (!user || !(await compare(credentials.password, user.password))) {
+      return null;
+    }
+
+    return {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      randomKey: "CHANGE_ME",
+    };
+  },
 });
 
+/**
+ * This `authOptions` object contains
+ * the configuration for our authentication process.
+ */
 export const authOptions: NextAuthOptions = {
-    session: {
-        strategy: "jwt"
+  session: {
+    strategy: "jwt",
+  },
+  providers: [localCredentialsProvider],
+  secret: process.env.NEXTAUTH_SECRET,
+  // NextAuth provides 2 callbacks:
+  // `jwt` and `session` that allow us
+  // to add our own custom information
+  // to the session object.
+  // TODO: evaluate if information about servers and
+  // rooms could be transmitted this way.
+  callbacks: {
+    session: ({ session, token }: { session: Session; token: JWT }) => {
+      console.log("Session Callback", { session, token });
+      return {
+        ...session,
+        user: {
+          ...session.user,
+          id: token.id,
+          randomKey: token.randomKey,
+        },
+      };
     },
-    providers: [
-        customProvider,
-        gitHub,
-    ],
-    adapter: PrismaAdapter(prisma),
+    jwt: ({ token, user }: { token: JWT; user: User | AdapterUser }) => {
+      console.log("JWT Callback", { token, user });
+      if (user) {
+        const u = user as unknown as any;
+        return {
+          ...token,
+          id: u.id,
+          randomKey: u.randomKey,
+        };
+      }
+      return token;
+    },
+  },
 };
 
+/**
+ * This creates an API handler
+ */
 const handler = NextAuth(authOptions);
 
+/**
+ * Here we export it simply as GET and POST
+ */
 export { handler as GET, handler as POST };

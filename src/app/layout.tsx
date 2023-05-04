@@ -1,9 +1,7 @@
-import './globals.css'
-
 // We want to import the `Providers` component in the toplevel Layout.
 // That way, each and every page will get wrapped with the Providers-
 // Component, allowing us to access Session State and Data.
-import { Providers } from '@/components/providers.component'
+import { NextAuthProvider } from '@/components/providers.component'
 
 export const metadata = {
   title: 'Realtime',
@@ -18,9 +16,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <Providers>
+        <NextAuthProvider>
           { children }
-        </Providers>
+        </NextAuthProvider>
       </body>
     </html>
   )
