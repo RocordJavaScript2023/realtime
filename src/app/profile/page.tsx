@@ -9,6 +9,5 @@ export default async function Profile() {
     if(!session) {
         redirect('/api/auth/signin');
     }
-
     
 }

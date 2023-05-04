@@ -1,9 +1,16 @@
+import { User } from "@prisma/client";
 import { Mapper } from "./mapper.interface";
+import { FrontendUser } from "@/lib/types/frontend-user.type";
 
-class FrontendMapper<Input, Output> implements Mapper<Input, Output> {
+export class FrontendMapper implements Mapper<User, FrontendUser> {
 
-    mapToType(input: Input): Output {
-        throw new Error("Method not implemented.");
+    mapToType(input: User): FrontendUser {
+        return {
+            id: input.id,
+            name: input.name,
+            picture: input.picture,
+            email: input.email,
+        };
     }
     
 }

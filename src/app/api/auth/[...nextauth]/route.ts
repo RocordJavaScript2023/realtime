@@ -11,11 +11,14 @@ import { User } from "@prisma/client";
 import { compare } from "bcryptjs";
 import { JWT } from "next-auth/jwt/types";
 import { AdapterUser } from "next-auth/adapters";
+import { FrontendMapper } from "@/lib/util/map/frontend-mapper";
 
 /**
  * As Credentials for Authentication,
  * we'll use a user's email and password.
+ * TODO:
  * https://codevoweb.com/setup-and-use-nextauth-in-nextjs-13-app-directory/
+ * https://codevoweb.com/nextjs-use-custom-login-and-signup-pages-for-nextauth-js/
  */
 const localCredentialsProvider: CredentialsConfig<
   Record<string, CredentialInput>
@@ -47,12 +50,11 @@ const localCredentialsProvider: CredentialsConfig<
       return null;
     }
 
-    return {
-      id: user.id,
-      email: user.email,
-      name: user.name,
-      randomKey: "CHANGE_ME",
-    };
+    const frontendMapper = new FrontendMapper();
+
+    const frontendUser = frontendMapper.mapToType(user);
+
+    return frontendUser;
   },
 });
 
@@ -70,8 +72,8 @@ export const authOptions: NextAuthOptions = {
   // `jwt` and `session` that allow us
   // to add our own custom information
   // to the session object.
-  // TODO: evaluate if information about servers and
-  // rooms could be transmitted this way.
+  // TODO: evaluate if information about servers,
+  // rooms and friends could be transmitted this way.
   callbacks: {
     session: ({ session, token }: { session: Session; token: JWT }) => {
       console.log("Session Callback", { session, token });
@@ -79,22 +81,11 @@ export const authOptions: NextAuthOptions = {
         ...session,
         user: {
           ...session.user,
-          id: token.id,
-          randomKey: token.randomKey,
         },
+        token: {
+          ...token
+        }
       };
-    },
-    jwt: ({ token, user }: { token: JWT; user: User | AdapterUser }) => {
-      console.log("JWT Callback", { token, user });
-      if (user) {
-        const u = user as unknown as any;
-        return {
-          ...token,
-          id: u.id,
-          randomKey: u.randomKey,
-        };
-      }
-      return token;
     },
   },
 };
