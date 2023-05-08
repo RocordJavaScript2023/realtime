@@ -53,6 +53,7 @@ model Room {
   server   Server    @relation(fields: [serverId], references: [id])
 }
 
+// Might not even be necessary.
 model Session {
   id           String   @id @default(cuid()) @map("_id")
   userId       String
