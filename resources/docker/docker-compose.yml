@@ -1,0 +1,12 @@
+version: '3.9'
+
+services:
+  mongodb:
+    build: ./mongodb-replica
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: prisma
+      MONGO_INITDB_ROOT_PASSWORD: prisma
+      MONGO_REPLICA_HOST: localhost
+      MONGO_REPLICA_PORT: 27017
+    ports:
+      - '27017:27017'
