@@ -1,5 +1,6 @@
 import NextAuth from "next-auth/next";
-import type { NextAuthOptions, Session } from "next-auth";
+import type { Account, NextAuthOptions, Profile, Session, User as NextAuthUser, Awaitable, DefaultSession } from "next-auth";
+import { User } from '@prisma/client';
 import { prisma } from "@/lib/db/prisma-global";
 
 // The `CredentialsProvider` Module is used for validation
@@ -7,11 +8,11 @@ import CredentialsProvider, {
   CredentialInput,
   CredentialsConfig,
 } from "next-auth/providers/credentials";
-import { User } from "@prisma/client";
 import { compare } from "bcryptjs";
-import { JWT } from "next-auth/jwt/types";
-import { AdapterUser } from "next-auth/adapters";
 import { FrontendMapper } from "@/lib/util/map/frontend-mapper";
+import type { JWT } from "next-auth/jwt";
+import { AdapterUser } from "next-auth/adapters";
+import { FrontendUser } from "@/lib/types/frontend-user.type";
 
 /**
  * As Credentials for Authentication,
@@ -63,31 +64,62 @@ const localCredentialsProvider: CredentialsConfig<
  * the configuration for our authentication process.
  */
 export const authOptions: NextAuthOptions = {
+  // General options for session
   session: {
+    // We are going to use jwt as auth Method.
+    // The Session Object will be stored as a cookie.
     strategy: "jwt",
+
+    // The time in seconds until an idle session expires and is no longer valid
+    maxAge: 60 * 60 * 24, // 24 hours
   },
+
+  // Specific options for the jwt token itself.
+  jwt: {
+    // The Maximum age of the NextAuth.js issued JWT in seconds.
+    // Defaults to session.maxAge.
+    // But I'm paranoid, so I'm going to set it to the same value
+    // as session.maxAge manually.
+    maxAge: 60 * 60 * 24, // 24 hours
+  },
+
+  // The Array of Credential Providers (i.e Sign-In Options)
   providers: [localCredentialsProvider],
-  secret: process.env.NEXTAUTH_SECRET,
+
+  // Provide an emergency fallback secret, just in case.
+  secret: process.env.NEXTAUTH_SECRET ?? "TkVYVEpT",
+
   // NextAuth provides 2 callbacks:
   // `jwt` and `session` that allow us
   // to add our own custom information
   // to the session object.
   // TODO: evaluate if information about servers,
-  // rooms and friends could be transmitted this way.
+  // rooms and friends could be transmitted this way. (Probably extremely unsecure)
   callbacks: {
-    session: ({ session, token }: { session: Session; token: JWT }) => {
-      console.log("Session Callback", { session, token });
-      return {
-        ...session,
-        user: {
-          ...session.user,
-        },
-        token: {
-          ...token
+    session: async ({session} : {session: Session}) => {
+
+      if(session.user?.email) {
+        let backendUser: User | null = await prisma.user.findUnique({
+          where: {
+            email: session.user.email,
+          },
+        });
+
+        if(backendUser) {
+          let frontendUser = new FrontendMapper().mapToType(backendUser);
+
+          return {
+            ...session,
+            user: frontendUser,
+          };
+
         }
-      };
+
+      }
+
+      return session;
     },
-  },
+  }
 };
 
 /**
