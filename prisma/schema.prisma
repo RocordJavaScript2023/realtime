@@ -1,39 +1,38 @@
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "mongodb"
-    url      = env("DATABASE_URL")
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
 }
 
-
 model User {
-    id       String @id @default(cuid()) @map("_id")
-    name     String
-    email    String @unique
-    password String
-    picture  String
-    emailVerified DateTime?
-    messages Message[]
-    servers UserOnServer[]
-    sessions Session[]
+  id            String         @id @default(cuid()) @map("_id")
+  name          String
+  email         String         @unique
+  password      String
+  picture       String
+  emailVerified DateTime?
+  messages      Message[]
+  servers       UserOnServer[]
+  sessions      Session[]
 }
 
 model Server {
-    id        String   @id @default(cuid()) @map("_id")
-    rooms     Room[]
-    members   UserOnServer[]
+  id      String         @id @default(cuid()) @map("_id")
+  rooms   Room[]
+  members UserOnServer[]
 }
 
 model UserOnServer {
-    user User @relation(fields: [userId], references: [id])
-    userId     String
-    server Server @relation(fields: [serverId], references: [id])
-    serverId String
-    assignedAt DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id])
+  userId     String   @map("_id")
+  server     Server   @relation(fields: [serverId], references: [id])
+  serverId   String
+  assignedAt DateTime @default(now())
 
-    @@id([userId, serverId])
+  @@id(userId)
 }
 
 model Message {
