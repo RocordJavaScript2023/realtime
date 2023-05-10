@@ -56,14 +56,14 @@ export class RequestHandler<Req extends Request, Res extends Response> implement
         return this;   
     }
 
-    handleRequest(request: Req): Res | null {
+    async handleRequest(request: Req): Res | null {
         
         if(this.handle !== null && typeof this.handle !== 'undefined') {
             const requestPath = filterUrl(request);
 
             if(requestPath === this.pathComponent) {
 
-                return this.handle(request)
+                return await this.handle(request)
 
             } else {
 
