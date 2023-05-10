@@ -1,5 +1,5 @@
 import NextAuth from "next-auth/next";
-import type { Account, NextAuthOptions, Profile, Session, User as NextAuthUser, Awaitable, DefaultSession } from "next-auth";
+import type { NextAuthOptions, Session } from "next-auth";
 import { User } from '@prisma/client';
 import { prisma } from "@/lib/db/prisma-global";
 
@@ -10,8 +10,6 @@ import CredentialsProvider, {
 } from "next-auth/providers/credentials";
 import { compare } from "bcryptjs";
 import { FrontendMapper } from "@/lib/util/map/frontend-mapper";
-import type { JWT } from "next-auth/jwt";
-import { AdapterUser } from "next-auth/adapters";
 import { FrontendUser } from "@/lib/types/frontend-user.type";
 
 /**
@@ -106,7 +104,7 @@ export const authOptions: NextAuthOptions = {
         });
 
         if(backendUser) {
-          let frontendUser = new FrontendMapper().mapToType(backendUser);
+          let frontendUser: FrontendUser = new FrontendMapper().mapToType(backendUser);
 
           return {
             ...session,
