@@ -56,14 +56,20 @@ export class RequestHandler<Req extends Request, Res extends Response> implement
         return this;   
     }
 
-    async handleRequest(request: Req): Res | null {
+    handleRequest(request: Req): Res | null {
         
+
+        // TODO: make function fully async
         if(this.handle !== null && typeof this.handle !== 'undefined') {
             const requestPath = filterUrl(request);
 
             if(requestPath === this.pathComponent) {
 
-                return await this.handle(request)
+                this.handle(request).then((res) => {
+                    return res;
+                }, (reason) => {
+                    return null;
+                })
 
             } else {
 
