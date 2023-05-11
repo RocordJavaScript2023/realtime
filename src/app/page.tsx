@@ -13,12 +13,8 @@ export default async function Home() {
 
   return (
     <main>
-      <LoginButton />
-      <RegisterButton />
-      <LogoutButton />
-      <ProfileButton />
-
       <div>
+        <LoginButton />
         <User/>
       </div>
     </main>
