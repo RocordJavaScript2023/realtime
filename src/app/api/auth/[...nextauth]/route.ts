@@ -91,8 +91,6 @@ export const authOptions: NextAuthOptions = {
   // `jwt` and `session` that allow us
   // to add our own custom information
   // to the session object.
-  // TODO: evaluate if information about servers,
-  // rooms and friends could be transmitted this way. (Probably extremely unsecure)
   callbacks: {
     session: async ({session} : {session: Session}) => {
 
