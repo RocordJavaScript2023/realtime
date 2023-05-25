@@ -1,5 +1,4 @@
-import { NextResponse } from "next/server";
-import { NextRequest } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 import { Session, getServerSession } from "next-auth";
 import { NextURL } from "next/dist/server/web/next-url";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
@@ -14,7 +13,9 @@ import { FrontendUser } from "./lib/types/frontend-user.type";
 import { prisma } from "./lib/db/prisma-global";
 
 export async function middleware(request: NextRequest) {
-  const defaultResponse: NextResponse = defaultNextResponse();
+
+
+  const defaultResponse: NextResponse = await defaultNextResponse(request);
 
   const handlerFactory: NextHandlerFactory = new NextHandlerFactory();
 

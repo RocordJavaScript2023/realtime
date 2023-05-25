@@ -87,6 +87,12 @@ export const authOptions: NextAuthOptions = {
   // Provide an emergency fallback secret, just in case.
   secret: process.env.NEXTAUTH_SECRET ?? "TkVYVEpT",
 
+
+  // Configuration for login pages should go here.
+  pages: {
+    signIn: "/login",
+  },
+
   // NextAuth provides 2 callbacks:
   // `jwt` and `session` that allow us
   // to add our own custom information

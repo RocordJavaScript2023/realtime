@@ -60,7 +60,6 @@ export class RequestHandler<Req extends Request, Res extends Response> implement
     async handleRequest(request: Req): Promise<Res | null> {
         
 
-        // TODO: make function fully async
         if(this.handle !== null && typeof this.handle !== 'undefined') {
             const requestPath = filterUrl(request);
 
