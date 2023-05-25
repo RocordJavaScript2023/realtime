@@ -1,5 +1,4 @@
 import { LoginButton, LogoutButton, ProfileButton, RegisterButton } from '@/components/buttons.component';
-import { LoginForm } from '@/components/login-form.component';
 import { Inter } from 'next/font/google';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
@@ -14,12 +13,8 @@ export default async function Home() {
 
   return (
     <main>
-      <LoginButton />
-      <RegisterButton />
-      <LogoutButton />
-      <ProfileButton />
-
       <div>
+        <LoginButton />
         <User/>
       </div>
     </main>
