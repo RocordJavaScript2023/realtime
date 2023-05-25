@@ -54,7 +54,7 @@ const localCredentialsProvider: CredentialsConfig<
     const frontendUser = frontendMapper.mapToType(user);
 
     return frontendUser;
-  },
+  }
 });
 
 /**
