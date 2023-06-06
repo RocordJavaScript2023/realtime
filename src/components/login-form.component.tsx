@@ -1,6 +1,6 @@
 "use client";
 
-import { SignInResponse, signIn } from "next-auth/react";
+import { SignInResponse, signIn, signOut, useSession } from "next-auth/react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { ChangeEvent, Dispatch, SetStateAction, useState } from "react";
 import Link from "next/link";
