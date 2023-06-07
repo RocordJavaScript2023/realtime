@@ -3,6 +3,8 @@ import type { NextAuthOptions, Session } from "next-auth";
 import { User } from '@prisma/client';
 import { prisma } from "@/lib/db/prisma-global";
 import GitHubProvider from "next-auth/providers/github";
+import GoogleProvider from "next-auth/providers/google";
+import TwitterProvider from "next-auth/providers/twitter";
 
 // The `CredentialsProvider` Module is used for validation
 import CredentialsProvider, {
@@ -16,6 +18,16 @@ import { FrontendUser } from "@/lib/types/frontend-user.type";
 const gitHubProvider = GitHubProvider({
     clientId: process.env.GITHUB_ID ?? "changeMe",
     clientSecret: process.env.GITHUB_SECRET ?? ""
+});
+
+const googleProvider = GoogleProvider({
+    clientId: process.env.GOOGLE_CLIENT_ID?? "changeMe",
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? ""
+});
+
+const twitterProvider = TwitterProvider({
+    clientId: process.env.TWITTER_CLIENT_ID??"",
+    clientSecret: process.env.TWITTER_CLIENT_SECRET??""
 });
 
 
@@ -91,7 +103,7 @@ export const authOptions: NextAuthOptions = {
     },
 
     // The Array of Credential Providers (i.e Sign-In Options)
-    providers: [localCredentialsProvider,gitHubProvider],
+    providers: [localCredentialsProvider, gitHubProvider, googleProvider, twitterProvider],
 
     // Provide an emergency fallback secret, just in case.
     secret: process.env.NEXTAUTH_SECRET ?? "TkVYVEpT",
