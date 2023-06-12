@@ -19,11 +19,14 @@
     "@types/react-dom": "18.0.11",
     "bcryptjs": "^2.4.3",
     "eslint": "8.38.0",
-    "eslint-config-next": "13.3.0",
-    "next": "13.3.0",
-    "next-auth": "0.0.0-pr.6777.c5550344",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
+
+    "eslint-config-next": "^13.4.4",
+    "google-auth-library": "^8.8.0",
+    "next": "^13.4.4",
+    "next-auth": "^4.22.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+
     "socket.io": "^4.6.1",
     "socket.io-client": "^4.6.1"
   },

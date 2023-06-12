@@ -1,3 +1,5 @@
+aultResponse: NextResponse = defaultNextResponse();
+=======
 import { NextResponse, NextRequest } from "next/server";
 import { Session, getServerSession } from "next-auth";
 import { NextURL } from "next/dist/server/web/next-url";
@@ -17,7 +19,7 @@ export async function middleware(request: NextRequest) {
 
   const defaultResponse: NextResponse = await defaultNextResponse(request);
 
-  const handlerFactory: NextHandlerFactory = new NextHandlerFactory();
+    const handlerFactory: NextHandlerFactory = new NextHandlerFactory();
 
   const apiHandler: Chainable<NextRequest, NextResponse> = handlerFactory
     .create()
