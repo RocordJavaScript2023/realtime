@@ -74,6 +74,7 @@ const localCredentialsProvider: CredentialsConfig<
 
         const frontendUser = frontendMapper.mapToType(user);
 
+
         return frontendUser;
     },
 });
@@ -83,15 +84,50 @@ const localCredentialsProvider: CredentialsConfig<
  * the configuration for our authentication process.
  */
 export const authOptions: NextAuthOptions = {
-    // General options for session
-    session: {
-        // We are going to use jwt as auth Method.
-        // The Session Object will be stored as a cookie.
-        strategy: "jwt",
+  // General options for session
+  session: {
+    // We are going to use jwt as auth Method.
+    // The Session Object will be stored as a cookie.
+    strategy: "jwt",
 
-        // The time in seconds until an idle session expires and is no longer valid
-        maxAge: 60 * 60 * 24, // 24 hours
-    },
+    // The time in seconds until an idle session expires and is no longer valid
+    maxAge: 60 * 60 * 24, // 24 hours
+  },
+
+  // Specific options for the jwt token itself.
+  jwt: {
+    // The Maximum age of the NextAuth.js issued JWT in seconds.
+    // Defaults to session.maxAge.
+    // But I'm paranoid, so I'm going to set it to the same value
+    // as session.maxAge manually.
+    maxAge: 60 * 60 * 24, // 24 hours
+  },
+
+  // The Array of Credential Providers (i.e Sign-In Options)
+  providers: [localCredentialsProvider],
+
+  // Provide an emergency fallback secret, just in case.
+  secret: process.env.NEXTAUTH_SECRET ?? "TkVYVEpT",
+
+
+  // Configuration for login pages should go here.
+  pages: {
+    signIn: "/login",
+  },
+
+  // NextAuth provides 2 callbacks:
+  // `jwt` and `session` that allow us
+  // to add our own custom information
+  // to the session object.
+  callbacks: {
+    session: async ({session} : {session: Session}) => {
+
+      if(session.user?.email) {
+        let backendUser: User | null = await prisma.user.findUnique({
+          where: {
+            email: session.user.email,
+          },
+        });
 
     // Specific options for the jwt token itself.
     jwt: {

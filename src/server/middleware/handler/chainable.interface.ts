@@ -12,5 +12,5 @@ export interface Chainable<Req extends Request, Res extends Response> {
 
     setHandle(fn: HandlerFunction<Req, Res>): Chainable<Req, Res>
 
-    handleRequest(request: Req): Res | null;
+    handleRequest(request: Req): Promise<Res | null>;
 }
