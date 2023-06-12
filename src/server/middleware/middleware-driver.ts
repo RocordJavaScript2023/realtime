@@ -45,13 +45,13 @@ export class MiddleWareDriver<Req extends Request, Res extends Response> {
     return this;
   }
 
-  public handleRequest(request: Req): Res {
+  public async handleRequest(request: Req): Promise<Res> {
     if (
       this.handlerChain !== null &&
       typeof this.handlerChain !== "undefined"
     ) {
       try {
-        const response: Res | null = this.handlerChain.handleRequest(request);
+        const response: Res | null = await this.handlerChain.handleRequest(request);
 
         if (response !== null && typeof response !== "undefined") {
           return response;

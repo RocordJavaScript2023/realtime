@@ -35,11 +35,12 @@ export class RequestHandler<Req extends Request, Res extends Response> implement
     }
     
     getPathComponent(): string {
-        throw new Error("Method not implemented.");
+        return this.pathComponent;
     }
     
     setPathComponent(component: string): Chainable<Req, Res> {
-        throw new Error("Method not implemented.");
+        this.pathComponent = component;
+        return this;
     }
     
     getNext(): Chainable<Req, Res> | null {
@@ -56,26 +57,21 @@ export class RequestHandler<Req extends Request, Res extends Response> implement
         return this;   
     }
 
-    handleRequest(request: Req): Res | null {
+    async handleRequest(request: Req): Promise<Res | null> {
         
 
-        // TODO: make function fully async
         if(this.handle !== null && typeof this.handle !== 'undefined') {
             const requestPath = filterUrl(request);
 
             if(requestPath === this.pathComponent) {
 
-                this.handle(request).then((res) => {
-                    return res;
-                }, (reason) => {
-                    return null;
-                })
+                return await this.handle(request);
 
             } else {
 
                 if(this.next !== null && typeof this.next !== 'undefined') {
 
-                    return this.next.handleRequest(request);
+                    return await this.next.handleRequest(request);
 
                 } else {
 
