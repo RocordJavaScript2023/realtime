@@ -1,9 +1,7 @@
-aultResponse: NextResponse = defaultNextResponse();
-=======
 import { NextResponse, NextRequest } from "next/server";
 import { Session, getServerSession } from "next-auth";
 import { NextURL } from "next/dist/server/web/next-url";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/app/config/auth/authoptions";
 import { JWT, getToken } from "next-auth/jwt";
 import { MiddleWareDriver } from "./server/middleware/middleware-driver";
 import { defaultNextResponse } from "./server/middleware/handler/functions/handler-functions";
