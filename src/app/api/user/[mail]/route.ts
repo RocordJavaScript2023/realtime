@@ -51,7 +51,11 @@ export async function GET(request: NextRequest,{ params }: {params: { mail: stri
                 status: 302,
             });
         } else {
-            return notFound();
+            return NextResponse.json({
+                status: "404-Not found"
+            }, {
+                status: 404,
+            });
         }
     }
 
