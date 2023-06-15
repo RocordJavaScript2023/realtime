@@ -69,5 +69,9 @@ export async function GET(request: NextRequest,{ params }: {params: { mail: stri
 // TODO: Necessary?
 export async function POST(): Promise<NextResponse> {
 
-    return unauthorized();
+    return NextResponse.json({
+        status: "401-Unauthorized"
+    }, {
+        status: 401,
+    });
 }
