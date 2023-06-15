@@ -1,7 +1,7 @@
-import { getServerSession } from "next-auth/next"
-import { authOptions } from "./auth"
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/lib/auth/authoptions";
 
-export default async (req, res) => {
+export default async (req: any, res: any) => {
     const session = await getServerSession(req, res, authOptions)
 
     if (session) {

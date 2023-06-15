@@ -150,7 +150,7 @@
     "picocolors" "^1.0.0"
     "tslib" "^2.5.0"
 
-"@prisma/client@^4.15.0", "@prisma/client@>=2.26.0 || >=3":
+"@prisma/client@^4.14.0", "@prisma/client@>=2.26.0 || >=3":
   "integrity" "sha512-xnROvyABcGiwqRNdrObHVZkD9EjkJYHOmVdlKy1yGgI+XOzvMzJ4tRg3dz1pUlsyhKxXGCnjIQjWW+2ur+YXuw=="
   "resolved" "https://registry.npmjs.org/@prisma/client/-/client-4.15.0.tgz"
   "version" "4.15.0"

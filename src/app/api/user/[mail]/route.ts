@@ -5,7 +5,6 @@ import { FrontendMapper } from "@/lib/util/map/frontend-mapper";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { prisma } from "@/lib/db/prisma-global";
 import { User } from "@prisma/client";
-import { unauthorized, notFound } from "@/lib/response/responses";
 import { JWT, getToken } from "next-auth/jwt";
 
 function validUserSession(session: { user: FrontendUser } | null | undefined, token: JWT | null): Boolean {
