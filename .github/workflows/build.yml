@@ -28,16 +28,18 @@ jobs:
       NODE_VERSION: ${{ secrets.NODE_VERSION }}
 
   steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-node@v3
+    - name: Prisma generate Types and Node Build using NODEJS ${{ env.NODE_VERSION }}
+      uses: actions/checkout@v3
+      uses: actions/setup-node@v3
       with: 
         node-version: ${{ env.NODE_VERSION }}
         cache: 'npm'
-    - run: npm ci
-    - run: npx prisma generate
-    - run: npm run build --if-present
+      run: npm ci
+      run: npx prisma generate
+      run: npm run build --if-present
 
-    - uses: actions/upload-artifact@v3
+    - name: Archive Build Artifacts
+      uses: actions/upload-artifact@v3
       with:
         name: dist-without-markdown
         retention-days: 14
