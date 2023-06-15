@@ -59,7 +59,11 @@ export async function GET(request: NextRequest,{ params }: {params: { mail: stri
         }
     }
 
-    return unauthorized();
+    return NextResponse.json({
+        status: "401-Unauthorized"
+    }, {
+        status: 401,
+    });
 }
 
 // TODO: Necessary?
