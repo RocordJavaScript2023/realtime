@@ -1,4 +1,3 @@
-import { UserSessionAndToken } from "@/lib/types/user-session-and-token";
 import { AuthOptions, Session, getServerSession } from "next-auth";
 import { JWT, getToken } from "next-auth/jwt";
 import { NextRequest } from "next/server";
