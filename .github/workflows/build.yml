@@ -32,5 +32,5 @@ jobs:
         with:
           name: dist
           path: |
-            dist
-            !dist/**/*.md
+            .next
+            !.next/**/*.md
