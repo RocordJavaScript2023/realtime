@@ -1,16 +1,35 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
 
 First, run the development server:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
+npm install
+npx prisma generate
 ```
+
+Once `generate` is done, start the database with
+
+```bash
+cd resources/docker
+docker-compose up
+```
+
+After that push the database - schema to the DB:
+
+```bash
+npx prisma db push
+npx prisma db seed
+```
+
+Now, you can run the dev server:
+
+```bash
+npm run dev
+```
+### Ad from NextJS:
+
+This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 

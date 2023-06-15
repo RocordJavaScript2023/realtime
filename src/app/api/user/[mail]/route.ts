@@ -5,7 +5,6 @@ import { FrontendMapper } from "@/lib/util/map/frontend-mapper";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { prisma } from "@/lib/db/prisma-global";
 import { User } from "@prisma/client";
-import { unauthorized, notFound } from "@/lib/response/responses";
 import { JWT, getToken } from "next-auth/jwt";
 
 function validUserSession(session: { user: FrontendUser } | null | undefined, token: JWT | null): Boolean {
@@ -52,15 +51,27 @@ export async function GET(request: NextRequest,{ params }: {params: { mail: stri
                 status: 302,
             });
         } else {
-            return notFound();
+            return NextResponse.json({
+                status: "404-Not found"
+            }, {
+                status: 404,
+            });
         }
     }
 
-    return unauthorized();
+    return NextResponse.json({
+        status: "401-Unauthorized"
+    }, {
+        status: 401,
+    });
 }
 
 // TODO: Necessary?
 export async function POST(): Promise<NextResponse> {
 
-    return unauthorized();
+    return NextResponse.json({
+        status: "401-Unauthorized"
+    }, {
+        status: 401,
+    });
 }

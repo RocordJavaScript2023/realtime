@@ -6,7 +6,8 @@ import { authOptions } from "@/app/config/auth/authoptions";
  */
 const handler = NextAuth(authOptions);
 
+
 /**
  * Here we export it simply as GET and POST
  */
-export { handler as GET, handler as POST };
+export { handler as GET, handler as POST, authOptions };
