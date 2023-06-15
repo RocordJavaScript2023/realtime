@@ -1,51 +1,26 @@
-# https://github.com/actions/setup-node/
-# https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
-# https://docs.github.com/en/actions/using-workflows/storing-workflow-data-as-artifacts
-name: Build NextJS Dist AND Deploy
+name: Node.js CI
 
 on:
   push:
-    tags:
-      - '*.*.*'
-      - '*.*.*-alpha'
-      - '*.*.*-beta'
-
-    push:
-      branches: [ main, feature/actions ]
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
   build:
+
     runs-on: ubuntu-latest
-    env:
-      DB_USER: ${{ secrets.DB_USER }}
-      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-      DATABASE_URL: ${{ secrets.DATABASE_URL }}
-      DB_HOST: ${{ secrets.DB_HOST }}
-      DB_DATABASE: ${{ secrets.DB_DATABASE }}
-      DB_PORT: ${{ secrets.DB_PORT }}
-      NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
-      NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL }}
-      NODE_VERSION: ${{ secrets.NODE_VERSION }}
 
-  steps:
-    - name: Prisma generate Types and Node Build using NODEJS ${{ env.NODE_VERSION }}
-      uses: actions/checkout@v3
-      uses: actions/setup-node@v3
-      with: 
-        node-version: ${{ env.NODE_VERSION }}
-        cache: 'npm'
-      run: npm ci
-      run: npx prisma generate
-      run: npm run build --if-present
+    strategy:
+      matrix:
+        node-version: [14.x, 16.x, 18.x, 20.x]
 
-    - name: Archive Build Artifacts
-      uses: actions/upload-artifact@v3
-      with:
-        name: dist-without-markdown
-        retention-days: 14
-        path: |
-          dist
-          !dist/**/*.md
-
-
-  
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm ci
+      - run: npm run build --if-present
+      - run: npm test
