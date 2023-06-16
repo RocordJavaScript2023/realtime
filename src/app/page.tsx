@@ -1,4 +1,10 @@
-import { LoginButton, LogoutButton, ProfileButton, RegisterButton } from '@/components/buttons.component';
+import {
+  LoginButton,
+  LogoutButton,
+  ProfileButton,
+  RegisterButton,
+  RoomButton,
+} from "@/components/buttons.component";
 import { Inter } from 'next/font/google';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
@@ -16,6 +22,7 @@ export default async function Home() {
       <div>
         <LoginButton />
         <User/>
+        <RoomButton />
       </div>
     </main>
   )
