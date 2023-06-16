@@ -1,0 +1,40 @@
+.sidebar {
+  width: 15rem;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: #dbdada;
+  border-right: 0.15rem solid gray;
+  padding-left: 3rem;
+}
+
+.profile img {
+  position: relative;
+  margin-left: 2rem;
+  width: 6rem;
+  height: 6rem;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.status-message {
+  margin-top: 1rem;
+  font-size: 1rem;
+}
+
+.navigation {
+  margin-top: 4rem;
+}
+
+li {
+  margin-bottom: 3rem;
+}
+
+.bottom-section {
+  margin-top: auto;
+}
+
+.logout-button button {
+  padding: 0.8rem 1.6rem;
+  margin: 1rem;
+}

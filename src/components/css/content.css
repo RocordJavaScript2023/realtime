@@ -1,0 +1,17 @@
+.content {
+  height: 100%;
+}
+
+.content2 {
+  position: absolute;
+  top: 5rem;
+  left: 23rem;
+  height: 42rem;
+  width: 70rem;
+}
+
+.content3 {
+  position: relative;
+  margin-top: 1rem;
+  height: 33rem;
+}

@@ -1,0 +1,37 @@
+.grid-container-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(5, 1fr);
+  grid-column-gap: 30px;
+  grid-row-gap: 15px;
+}
+
+.square-3 {
+  background-color: #9a9a9a;
+  padding: 10px;
+  text-align: center;
+  width: 22rem;
+  height: 2rem;
+}
+
+.square-3:hover {
+  cursor: pointer;
+  opacity: 0.8;
+}
+
+.pagination {
+  margin-bottom: 0.5rem;
+}
+
+.pagination button {
+  margin: 0.25rem;
+}
+
+.active {
+  background: rgb(176, 176, 176);
+}
+
+button:hover {
+  cursor: pointer;
+  opacity: 0.8;
+}
