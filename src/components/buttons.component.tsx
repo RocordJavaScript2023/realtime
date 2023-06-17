@@ -30,3 +30,7 @@ export const LogoutButton = () => {
 export const ProfileButton = () => {
     return <Link href="/profile">Profile</Link>
 };
+
+export const RoomButton = () => {
+  return <Link href="/rooms">Rooms</Link>;
+};

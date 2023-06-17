@@ -1,0 +1,63 @@
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  grid-column-gap: 30px;
+  grid-row-gap: 15px;
+}
+
+.square {
+  background-color: #9a9a9a;
+  padding: 10px;
+  text-align: center;
+  width: 12rem;
+  height: 7rem;
+}
+
+.square:hover {
+  cursor: pointer;
+  opacity: 0.8;
+}
+
+.pagination {
+  margin-bottom: 0.5rem;
+}
+.pagination button {
+  margin: 0.25rem;
+}
+.active {
+  background: rgb(176, 176, 176);
+}
+
+.create-room-btn {
+  position: absolute;
+  top: -3.5rem;
+  left: 58.5rem;
+  margin: 0;
+  height: 2.5rem;
+}
+.create-room-btn h2 {
+  margin: 0;
+}
+
+.form {
+  position: absolute;
+  top: -2.5rem;
+  left: 50rem;
+}
+
+.delete-button {
+  position: relative;
+  top: -8.2rem;
+  right: -11.2rem;
+  background-color: rgb(75, 75, 75);
+  color: white;
+  border: none;
+  padding: 0.3rem 0.5rem;
+  margin-left: 0.5rem;
+}
+
+button:hover {
+  cursor: pointer;
+  opacity: 0.8;
+}

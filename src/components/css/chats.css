@@ -1,0 +1,58 @@
+.grid-container-2 {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: repeat(8, 1fr);
+  grid-column-gap: 30px;
+  grid-row-gap: 15px;
+}
+
+.square-2 {
+  background-color: #9a9a9a;
+  padding: 10px;
+  text-align: center;
+  width: 22rem;
+  height: 2rem;
+}
+
+.square-2:hover {
+  cursor: pointer;
+  opacity: 0.8;
+}
+
+.pagination {
+  margin-bottom: 0.5rem;
+}
+
+.pagination button {
+  margin: 0.25rem;
+}
+
+.active {
+  background: rgb(176, 176, 176);
+}
+
+button:hover {
+  cursor: pointer;
+  opacity: 0.8;
+}
+
+.chat {
+  position: absolute;
+  top: 2.25rem;
+  left: 35rem;
+  height: 31.25rem;
+  width: 35rem;
+  background: #9a9a9a;
+}
+
+.chat h1 {
+  margin-left: 1rem;
+}
+
+.chat input {
+  position: absolute;
+  bottom: 2rem;
+  margin-left: 1.5rem;
+  height: 3rem;
+  width: 90%;
+}
