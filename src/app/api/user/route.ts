@@ -1,38 +1,27 @@
-import { NextApiRequest, NextApiResponse } from 'next';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, User } from "@prisma/client";
+import { NextRequest, NextResponse } from "next/server";
 
 const prisma = new PrismaClient();
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method === 'GET') {
+export async function GET(req: NextRequest) {
+  if (req.method === "GET") {
     try {
-      const users = await prisma.user.findMany();
-      res.status(200).json(users);
+      const users: User[] = await prisma.user.findMany();
+      return NextResponse.json({
+        status: 200,
+        data: users
+      })
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: 'Something went wrong' });
-    }
-  } else if (req.method === 'POST') {
-    try {
-      const { name, email, password, picture, emailVerified, messages, servers, sessions } = req.body;
-      const user = await prisma.user.create({
-        data: {
-          name,
-          email,
-          password,
-          picture,
-          emailVerified,
-          messages,
-          servers,
-          sessions
-        },
-      });
-      res.status(201).json(user);
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: 'Something went wrong' });
+      return NextResponse.json({
+        status: 500,
+        data: "Internal Server Error"
+      })
     }
   } else {
-    res.status(405).json({ error: 'Method not allowed' });
+    return NextResponse.json({
+      status: 405,
+      data: "Method not allowed",
+    })
   }
 }
