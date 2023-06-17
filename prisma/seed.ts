@@ -15,7 +15,16 @@ async function main() {
             password,
             picture: "",
         },
-    })
+    });
+    // const message = await prisma.message.upsert(
+    //     {
+    //         where: {id: "1"},
+    //         update: {},
+    //         create: {
+
+    //         }
+    //     }
+    // );
 }
 
 main()
