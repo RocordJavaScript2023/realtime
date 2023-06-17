@@ -1,14 +1,14 @@
-import { PrismaClient, User } from "@prisma/client";
+import { PrismaClient, Server } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 
 const prisma = new PrismaClient();
 
 export async function GET(req: NextRequest) {
   try {
-    const users: User[] = await prisma.user.findMany();
+    const servers: Server[] = await prisma.server.findMany();
     return NextResponse.json({
       status: 200,
-      data: users
+      data: servers
     })
   } catch (error) {
     console.error(error);

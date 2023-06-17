@@ -1,14 +1,14 @@
-import { PrismaClient, User } from "@prisma/client";
+import { PrismaClient, Room } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 
 const prisma = new PrismaClient();
 
 export async function GET(req: NextRequest) {
   try {
-    const users: User[] = await prisma.user.findMany();
+    const rooms: Room[] = await prisma.room.findMany();
     return NextResponse.json({
       status: 200,
-      data: users
+      data: rooms
     })
   } catch (error) {
     console.error(error);
