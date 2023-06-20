@@ -1,5 +1,5 @@
 import NextAuth from "next-auth/next";
-import { authOptions } from "@/app/config/auth/authoptions";
+import { authOptions } from "@/lib/auth/authoptions";
 
 /**
  * This creates an API handler

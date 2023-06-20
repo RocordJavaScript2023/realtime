@@ -1,8 +1,9 @@
 "use client";
 
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { ChangeEvent, useState } from "react";
+
 
 export const LoginForm = () => {
   const router = useRouter();
@@ -11,6 +12,7 @@ export const LoginForm = () => {
     email: "",
     password: "",
   });
+
   const [error, setError] = useState("");
 
   const searchParams = useSearchParams();
@@ -94,7 +96,7 @@ export const LoginForm = () => {
       <a
         className="px-7 py-2 text-white font-medium text-sm leading-snug uppercase rounded shadow-md hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out w-full flex justify-center items-center mb-3"
         style={{ backgroundColor: "#3b5998" }}
-        onClick={() => alert("Not implemented yet")}
+        onClick={() => signIn('google')}
         role="button"
       >
         <img
@@ -108,7 +110,7 @@ export const LoginForm = () => {
       <a
         className="px-7 py-2 text-white font-medium text-sm leading-snug uppercase rounded shadow-md hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out w-full flex justify-center items-center"
         style={{ backgroundColor: "#55acee" }}
-        onClick={() => alert("Not implemented yet")}
+        onClick={() => signIn('github')}
         role="button"
       >
         <img

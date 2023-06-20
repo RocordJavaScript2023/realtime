@@ -24,13 +24,13 @@ export default function Friends() {
   ];
 
   return (
-    <div>
-      <div className="app">
-        <Content
-          title={pageName}
-          component={<FriendsComponent data={dataArray} itemsPerPage={15} />}
-        />
+      <div>
+        <div className="app">
+          <Content
+              title={pageName}
+              component={<FriendsComponent data={dataArray} itemsPerPage={15} />}
+          />
+        </div>
       </div>
-    </div>
   );
 }
