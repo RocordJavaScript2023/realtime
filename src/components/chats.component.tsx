@@ -2,7 +2,8 @@
 import React, { useState } from "react";
 import "@/components/css/chats.css";
 
-export default function Chats({ data: initialData, itemsPerPage, searchTerm }) {
+// Where are the type annotations???
+export default function Chats({ data: initialData, itemsPerPage, searchTerm }: { data: { initialDat}) {
   const [currentPage, setCurrentPage] = useState(1);
   const [chatName, setchatName] = useState("");
   const [data, setData] = useState(initialData);

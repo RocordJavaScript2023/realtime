@@ -59,12 +59,15 @@ export default function Chats() {
 
     // Connect the socket.
     socket.connect();
+    console.log('Connecting to socket')
 
     function onConnect() {
+      console.log('Connected to socket');
       setIsConnected(true);
     }
 
     function onDisconnect() {
+      console.log('Disconnected from socket');
       setIsConnected(false);
     }
 
