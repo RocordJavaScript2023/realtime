@@ -65,6 +65,7 @@ export default function Chats() {
 
     if (currentUser.id === 'UNKNOWN') {
       // fetch the current User based on his Session Data.
+      // TODO: Currently Social Sign On Users are not supported --> Fix this shit!
       fetch('/api/user/current/', {
         method: 'GET',
       }).then((response: Response) => {
