@@ -1,13 +1,13 @@
 "use client";
-import React, { useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import "@/components/css/chats.css";
 import { RoomDTO } from "@/lib/types/dto/room-dto";
 
 // Where are the type annotations???
 export default function Chats({ roomArray, itemsPerPage, searchTerm }: { roomArray: RoomDTO[], itemsPerPage: number, searchTerm: string}) {
   const [currentPage, setCurrentPage] = useState(1);
-  const [chatName, setchatName] = useState("");
-  const [data, setData] = useState(roomArray);
+  const [chatName, setchatName]: [string, Dispatch<SetStateAction<string>>] = useState("");
+  const [data, setData]: [RoomDTO[], Dispatch<SetStateAction<RoomDTO[]>>] = useState(roomArray);
 
   const totalPages = Math.ceil(data.length / itemsPerPage);
 
@@ -18,30 +18,39 @@ export default function Chats({ roomArray, itemsPerPage, searchTerm }: { roomArr
     chat.roomName.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const currentchats = filteredData.slice(startIndex, endIndex);
+  const currentchats: RoomDTO[] = filteredData.slice(startIndex, endIndex);
 
-  const squares = currentchats.map((item, index) => (
-    <div key={index}>
+  const squares = currentchats.map((item: RoomDTO) => (
+    // Sonarlint: don't use array index in keys.
+    <div key={item.roomName}>
       <div className="square-2" onClick={() => handlechatClick(item)}>
-        {item}
+        {item.roomName}
       </div>
     </div>
   ));
 
-  const handlePageChange = (pageNumber) => {
-    setCurrentPage(pageNumber);
+  // types..
+  const handlePageChange = (pageNumber: number) => {
+    setCurrentPage(prevPageNumber => pageNumber);
   };
 
-  const handlechatClick = (chatNumber) => {
-    setchatName(chatNumber)
+  // types...
+  const handlechatClick = (chat: RoomDTO) => {
+    setchatName(prevChat => chat.roomName)
   };
 
   //todo optimieren?
-  React.useEffect(() => {
+  // use correct imports.
+  // also, where is the useEffect being anchored to?
+  // if no dependency-array is specified, useEffect will simply continue to loop endlessly.
+  // add an empty Array as dependency array, that way it will only run on mount and unmount.
+  // add a variable in the dependency array, and useEffect will be executed every time the 
+  // monitored value changes.
+  useEffect(() => {
     if (searchTerm.length > 0 && startIndex != 1 && currentchats.length < 12) {
       setCurrentPage(1);
     }
-  });
+  }, [searchTerm.length, startIndex, currentchats.length]);
 
   return (
     <div>
