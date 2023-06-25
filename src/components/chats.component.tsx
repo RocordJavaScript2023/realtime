@@ -1,20 +1,21 @@
 "use client";
 import React, { useState } from "react";
 import "@/components/css/chats.css";
+import { RoomDTO } from "@/lib/types/dto/room-dto";
 
 // Where are the type annotations???
-export default function Chats({ data: initialData, itemsPerPage, searchTerm }: { data: { initialDat}) {
+export default function Chats({ roomArray, itemsPerPage, searchTerm }: { roomArray: RoomDTO[], itemsPerPage: number, searchTerm: string}) {
   const [currentPage, setCurrentPage] = useState(1);
   const [chatName, setchatName] = useState("");
-  const [data, setData] = useState(initialData);
+  const [data, setData] = useState(roomArray);
 
   const totalPages = Math.ceil(data.length / itemsPerPage);
 
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
 
-  const filteredData = data.filter((chat) =>
-    chat.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredData: RoomDTO[] = data.filter((chat: RoomDTO) =>
+    chat.roomName.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const currentchats = filteredData.slice(startIndex, endIndex);

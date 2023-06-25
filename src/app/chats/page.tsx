@@ -13,6 +13,7 @@ import { MESSAGE_FROM_CLIENT_EVENT, MESSAGE_FROM_SERVER_EVENT } from "@/lib/type
 import { Socket } from "socket.io-client";
 import beehive  from './../../animations/beehive-loader.json';
 import Lottie from "react-lottie-player";
+import { UserDTO } from "@/lib/types/dto/user-dto";
 
 export default function Chats() {
   const pageName = "Chats";
@@ -25,6 +26,7 @@ export default function Chats() {
   // This component will store the necessary state data and 
   // pass it on to it's children via props.
   const [isConnected, setIsConnected]: [boolean, Dispatch<SetStateAction<boolean>>] = useState(socket.connected);
+  const [currentUser, setCurrentUser]: [UserDTO, Dispatch<SetStateAction<UserDTO>>] = useState({ id: 'UNKNOWN', name: 'UNKNOWN', email: 'UNKNOWN', picture: 'UNKNOWN'});
   const [messageEvents, setMessageEvents]: [MessageEvent[], Dispatch<SetStateAction<MessageEvent[]>>] = useState(new Array<MessageEvent>());
   const [broadCastEvents, setBroadCastEvents]: [BroadcastMessageEvent[], Dispatch<SetStateAction<BroadcastMessageEvent[]>>] = useState(new Array<BroadcastMessageEvent>());
   const [connectionEvents, setConnectionEvents]: [ConnectionEventMessage[], Dispatch<SetStateAction<ConnectionEventMessage[]>>] = useState(new Array<ConnectionEventMessage>());
@@ -49,12 +51,40 @@ export default function Chats() {
 
             const receivedRooms: RoomDTO[] = value.data as RoomDTO[];
             setRoomArray(roomArray => receivedRooms);
+          } else {
+            // TODO: remove alert
+            alert(`REQUEST FAILED! REASON: ${response.status}`);
           }
         })
       }).catch((reason: any) => {
         console.log(reason);
         alert(`Unable to load data from backend! Reason: ${reason}`);
       }); 
+    }
+
+    if (currentUser.id === 'UNKNOWN') {
+      // fetch the current User based on his Session Data.
+      fetch('/api/user/current/', {
+        method: 'GET',
+      }).then((response: Response) => {
+        response.json().then((value: any) => {
+
+          // if response is OK -> Body contains a single UserDTO object with current user
+          if (response.status === 200) {
+            
+            const receivedCurrentUser: UserDTO = value.data as UserDTO;
+            setCurrentUser(previousCurrentUser => receivedCurrentUser);
+
+          } else {
+            alert(`REQUEST FAILED! REASON: ${response.status}`);
+          }
+
+        }).catch((reason: any) => {
+          alert(`UNABLE TO PARSE JSON-BODY OF RESPONSE! REASON: ${reason}`);
+        }) 
+      }).catch((reason: any) => {
+        alert(`UNABLE TO FETCH CURRENT USER SESSION! REASON: ${reason}`);
+      })
     }
 
     // Connect the socket.
@@ -112,6 +142,18 @@ export default function Chats() {
     socket.on(MESSAGE_FROM_SERVER_EVENT, (event: MessageEvent) => handleMessageEventFromServerToClient(event));
     socket.on(BROADCAST_MESSAGE_EVENT, (event: BroadcastMessageEvent) => handleBroadCastEventsFromServer(event));
 
+    if (roomArray.length !== 0) {
+      for (const room of roomArray) {
+        const joinRoomEvent: JoinRoomEvent = {
+          roomToJoin: room,
+          user: currentUser
+        }
+        // join the available rooms
+        socket.emit(JOIN_ROOM, joinRoomEvent);
+        console.log(`Sending join request for room: ${room.roomName}`);
+      }
+    }
+
   }, []);
 
   if (isConnected) {
@@ -120,7 +162,7 @@ export default function Chats() {
         <div className="app">
           <Content
             title={pageName}
-            component={<ChatsComponent data={roomArray} itemsPerPage={8} />}
+            component={<ChatsComponent roomArray={roomArray} itemsPerPage={8} searchTerm=""/>}
           />
         </div>
       </div>

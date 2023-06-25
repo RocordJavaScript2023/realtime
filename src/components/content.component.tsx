@@ -4,10 +4,11 @@ import Notification from "@/components/notification.component";
 import Sidebar from "@/components/sidebar.component";
 import React, { useState } from "react";
 
-export default function Content({ title, component }) {
+// again, types are needed for checking if code is actually correct.
+export default function Content({ title, component }: { title: string, component: JSX.Element}) {
   const [searchTerm, setSearchTerm] = useState("");
 
-  const handleSearch = (event) => {
+  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
   };
 
