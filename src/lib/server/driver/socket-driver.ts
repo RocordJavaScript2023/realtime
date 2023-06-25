@@ -10,7 +10,8 @@ import MessageDTO from "./../../types/dto/message-dto";
 import { Message, User } from "@prisma/client";
 import { UserDTO } from "./../../types/dto/user-dto";
 import { RoomDTO } from "./../../types/dto/room-dto";
-import { TYPING_EVENT, TypingEvent } from "@/lib/types/events/typing-event";
+import { TYPING_EVENT, TypingEvent } from "./../../types/events/typing-event";
+import { BROADCAST_MESSAGE_EVENT, BroadcastMessageEvent } from "./../../types/events/broadcast-message-event";
 
 export const CONNECT_EVENT: string = 'connect';
 export const DISCONNECT_EVENT: string = 'disconnect';
@@ -31,10 +32,15 @@ export class SocketDriver implements SocketDriverInterface<socketio.Server, Prom
         socket.on(LEAVE_ROOM_EVENT, async (data: LeaveRoomEvent) => await this.handleLeaveRoomEvent(data, socket));
         socket.on(DISCONNECT_EVENT, async () => await this.handleDisconnectEvent(socket));
         socket.on(TYPING_EVENT, async (data: TypingEvent) => await this.handleTypingEvent(data, socket));
+        socket.on(BROADCAST_MESSAGE_EVENT, async (data: BroadcastMessageEvent) => this.handleBroadcastEvent(data, socket));
     }
     async handleDisconnectEvent(socket: socketio.Socket): Promise<void> {
         console.log('a client disconnected');
         console.log(`terminated session: ${socket.id}`);
+    }
+
+    async handleBroadcastEvent(event: BroadcastMessageEvent, socket: socketio.Socket): Promise<void> {
+        socket.broadcast.emit(BROADCAST_MESSAGE_EVENT, event);
     }
 
     async handleTypingEvent(event: TypingEvent, socket: socketio.Socket): Promise<void> {
