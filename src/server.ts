@@ -3,6 +3,7 @@ import next, { NextApiHandler } from "next";
 import express, { Express, Request, Response } from "express";
 import * as http from "http";
 import * as socketio from "socket.io";
+import { SocketDriver } from "./lib/server/driver/socket-driver";
 
 const port: number = parseInt(process.env.PORT ?? "3000", 10);
 const devEnv: boolean = process.env.NODE_ENV !== "production";
@@ -13,7 +14,14 @@ nextServer.prepare().then( async () => {
 
     const expressServer: Express = express();
     const plainHttpServer: http.Server = http.createServer(expressServer);
-    const socketIOWebSocketServer: socketio.Server = new socketio.Server();
+    const socketDriver: SocketDriver = new SocketDriver();
+    // During development we need to enable CORS (Cross Origin Resource Sharing) on our Server.
+    // What is CORS? --> https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
+    const socketIOWebSocketServer: socketio.Server = await socketDriver.configureEventHandling(new socketio.Server({
+        cors: {
+            origin: `http://localhost:${port}`,
+        }
+    }));
 
     // attach the socket.io server - then it'll be able to listen in on ws://localhost:3000/
     socketIOWebSocketServer.attach(plainHttpServer);

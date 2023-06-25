@@ -23,6 +23,21 @@
           "uriFormat": "%s",
           "action": "debugWithChrome"
         }
+      },
+      {
+        "type": "node",
+        "request": "launch",
+        "name": "TS-NODE debug",
+        "runtimeArgs": [
+          "-r",
+          "ts-node/register",
+        ],
+        "env": {
+          "TS_NODE_PROJECT": "tsconfig.json",
+        },
+        "args": [
+          "${workspaceFolder}/src/server.ts",
+        ]
       }
     ]
   }
