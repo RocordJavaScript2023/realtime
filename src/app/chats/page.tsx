@@ -14,6 +14,7 @@ import { Socket } from "socket.io-client";
 import beehive  from './../../animations/beehive-loader.json';
 import Lottie from "react-lottie-player";
 import { UserDTO } from "@/lib/types/dto/user-dto";
+import { MessageEvent } from "@/lib/types/events/message-event";
 
 export default function Chats() {
   const pageName = "Chats";
@@ -101,11 +102,6 @@ export default function Chats() {
       setIsConnected(false);
     }
 
-    // send a message to the server
-    function handleMessageEventFromClientToServer(event: MessageEvent, socket: Socket) {
-      socket.emit(MESSAGE_FROM_CLIENT_EVENT, event);
-    }
-
     // receive Messages from the server
     function handleMessageEventFromServerToClient(event: MessageEvent) {
       setMessageEvents(previousMessageEvents => [...previousMessageEvents, event]);
@@ -114,26 +110,6 @@ export default function Chats() {
     // receive BroadCasts from the server
     function handleBroadCastEventsFromServer(event: BroadcastMessageEvent) {
       setBroadCastEvents(previousBroadCastEvents => [...previousBroadCastEvents, event]);
-    }
-
-    // send a request to join a room to the server
-    function handleJoinRoomMessageEvent(event: JoinRoomEvent, socket: Socket) {
-      socket.emit(JOIN_ROOM, event);
-    }
-
-    // handle information about joining rooms from server
-    function handleJoinedRoomMessageEvent(event: JoinedRoomEvent) {
-      setJoinedRoomEvents(previousJoinedRoomEvents => [...previousJoinedRoomEvents, event]);
-    }
-
-    // send a request to leave a room to the server
-    function handleLeaveRoomMessageEvent(event: LeaveRoomEvent, socket: Socket) {
-      socket.emit(LEAVE_ROOM_EVENT, event);
-    }
-
-    // handle information about leaving rooms from server
-    function handleLeftRoomMessageEvent(event: LeftRoomEvent) {
-      setLeftRoomEvents(previousLeftRoomEvents => [...previousLeftRoomEvents, event]);
     }
 
     // configure the logic for the socket-connection.
@@ -154,15 +130,35 @@ export default function Chats() {
       }
     }
 
+    // Any event listeners registered in the setup function must be 
+    // removed in the cleanup callback in order to prevent 
+    // duplicate event registrations.
+    // Also, the event listeners are named functions, so calling socket.off() only
+    // removes the specific event listener.
+    return () => {
+
+      // Cleanup
+      socket.off(CONNECT, onConnect);
+      socket.off(DISCONNECT, onDisconnect);
+      socket.off(MESSAGE_FROM_SERVER_EVENT, handleMessageEventFromServerToClient)
+      socket.off(BROADCAST_MESSAGE_EVENT, handleBroadCastEventsFromServer);
+
+      // If we need to close the socket.io client when the component is unmounted,
+      // for example if the connection is only needed in a specific part of our application,
+      // the we should ensure that socket.connect() is called on initial setup. (which it is)
+      // and then call: socket.disconnect()
+      socket.disconnect();
+    }
+
   }, []);
 
-  if (isConnected) {
+  if (isConnected && currentUser.id !== 'UNKNOWN') {
     return (
       <div>
         <div className="app">
           <Content
             title={pageName}
-            component={<ChatsComponent roomArray={roomArray} itemsPerPage={8} searchTerm=""/>}
+            component={<ChatsComponent connectionStatus={isConnected} messageEvents={messageEvents} currentUser={currentUser} roomArray={roomArray} itemsPerPage={8} searchTerm=""/>}
           />
         </div>
       </div>
