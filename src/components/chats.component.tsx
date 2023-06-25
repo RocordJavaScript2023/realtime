@@ -167,6 +167,8 @@ export default function Chats({
         chatName={chatName}
         currentVal={currentMessageContent}
         typingStatus={typingStatus}
+        messageEvents={messageEvents}
+        currentRoom={roomArray[roomArray.findIndex((room: RoomDTO) => { return room.roomName === chatName; })]}
         onChange={handleInput}
         onKeyDown={handleKeyDown}
       />

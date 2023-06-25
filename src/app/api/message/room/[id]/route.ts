@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db/prisma-global";
-import { Message, User } from "@prisma/client";
+import { Message, Room, User } from "@prisma/client";
 import { UserDTO } from "@/lib/types/dto/user-dto";
 import { RoomDTO } from "@/lib/types/dto/room-dto";
 import MessageDTO from "@/lib/types/dto/message-dto";
@@ -33,11 +33,35 @@ export async function GET(request: NextRequest, { params }: { params: { roomId: 
                         email: associatedUser.email,
                     };
                 }
+
+                const roomUsed: Room | null = await prisma.room.findUnique({
+                    where: { id: params.roomId },
+                });
+
+                let roomDTO: RoomDTO | null = null;
+
+                if (roomUsed !== null && typeof roomUsed !== 'undefined') {
+                    roomDTO = {
+                        id: roomUsed.id,
+                        serverId: roomUsed.serverId,
+                        roomName: roomUsed.roomName
+                    };
+                }
     
                 const messageToAppend: MessageDTO = {
-                    user: userDTO,
+                    user: userDTO ?? {
+                        id: 'UNKNOWN',
+                        name: 'UNKNOWN',
+                        email: 'UNKNOWN',
+                        picture: 'UNKNOWN'
+                    },
                     createdAt: element.createdAt,
                     content: element.content,
+                    roomUsed: roomDTO ?? {
+                        id: 'UNKNOWN',
+                        serverId: 'UNKNOWN',
+                        roomName: 'UNKNOWN'
+                    };
                 };
     
                 returnMessages.push(messageToAppend);
