@@ -13,6 +13,7 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+  
   return (
     <html lang="en">
       <body>
@@ -21,5 +22,5 @@ export default function RootLayout({
         </NextAuthProvider>
       </body>
     </html>
-  )
+  );
 }

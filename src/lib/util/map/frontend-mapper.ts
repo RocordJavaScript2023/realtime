@@ -1,14 +1,13 @@
 import { User } from "@prisma/client";
 import { Mapper } from "./mapper.interface";
-import { FrontendUser } from "@/lib/types/frontend-user.type";
-import { hashSync } from "bcryptjs";
+import { UserDTO } from "@/lib/types/dto/user-dto";
 
 
-export class FrontendMapper implements Mapper<User, FrontendUser> {
+export class FrontendMapper implements Mapper<User, UserDTO> {
 
-    mapToType(input: User): FrontendUser {
+    mapToType(input: User): UserDTO {
         return {
-            id: hashSync(input.id, 12),
+            id: input.id,
             name: input.name,
             picture: input.picture,
             email: input.email,

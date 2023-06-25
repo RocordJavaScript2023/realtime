@@ -6,7 +6,7 @@ import type { NextAuthOptions, Session } from 'next-auth';
 import CredentialsProvider, { CredentialInput, CredentialsConfig} from "next-auth/providers/credentials";
 import { compare } from "bcryptjs";
 import { FrontendMapper } from "@/lib/util/map/frontend-mapper";
-import { FrontendUser } from "@/lib/types/frontend-user.type";
+import { UserDTO } from '../types/dto/user-dto';
 import NextAuth from "next-auth/next";
 
 const gitHubProvider = GitHubProvider({
@@ -109,7 +109,7 @@ export const authOptions: NextAuthOptions = {
         });
 
         if(backendUser) {
-          let frontendUser: FrontendUser = new FrontendMapper().mapToType(backendUser);
+          let frontendUser: UserDTO = new FrontendMapper().mapToType(backendUser);
 
           return {
             ...session,
