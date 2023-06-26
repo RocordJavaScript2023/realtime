@@ -28,7 +28,7 @@ export default function ChatWindow({
 
   // re-load messages on room switch
   useEffect(() => {
-
+    console.log(`Room changed, trying to fetch data for ${currentRoom.id} - ${currentRoom.roomName}`);
     console.log('ROOM CHANGED RELOADING MESSAGES ...');
 
     console.log('Sending Request to join new room');
@@ -39,7 +39,7 @@ export default function ChatWindow({
 
     socket.emit(JOIN_ROOM, joinRoomRequest);
 
-    fetch(`/api/message/room/${currentRoom.id}`, {
+    fetch(`/api/message/room/name/${currentRoom.roomName.replaceAll(' ', '%20')}`, {
       method: 'GET',
     }).then((response: Response) => {
       if (response.status === 200) {
@@ -53,6 +53,7 @@ export default function ChatWindow({
           setLoadedMessages((old: MessageDTO[]) => {
             return transmittedMessages;
           });
+          console.log('setting new messages');
 
         }).catch((reason: any) => {
           alert(`UNABLE TO PARSE JSON BODY! REASON: ${reason}`);
@@ -62,7 +63,7 @@ export default function ChatWindow({
       alert(`UNABLE TO LOAD MESSAGES FOR CURRENT ROOM! REASON: ${reason}`);
     })
 
-  }, [currentRoom, currentUser])
+  }, [currentRoom])
 
   useEffect(() => {
 
@@ -87,7 +88,7 @@ export default function ChatWindow({
     // fetch messages for room
     if (loadedMessages.length === 0 && currentRoom) {
 
-      fetch(`/api/message/room/${currentRoom.id}`, {
+      fetch(`/api/message/room/name/${currentRoom.roomName}`, {
         method: "GET",
       })
         .then((response: Response) => {
