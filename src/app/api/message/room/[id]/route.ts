@@ -27,7 +27,7 @@ export async function GET(request: NextRequest, { params }: { params: { roomId: 
     
                 if (associatedUser !== null && typeof associatedUser !== 'undefined') {
                     userDTO = {
-                        id: hashSync(associatedUser.id),
+                        id: associatedUser.id,
                         name: associatedUser.name,
                         picture: associatedUser.picture,
                         email: associatedUser.email,
@@ -35,7 +35,9 @@ export async function GET(request: NextRequest, { params }: { params: { roomId: 
                 }
 
                 const roomUsed: Room | null = await prisma.room.findUnique({
-                    where: { id: params.roomId },
+                    where: {
+                        id: element.roomId,
+                    },
                 });
 
                 let roomDTO: RoomDTO | null = null;
@@ -61,7 +63,7 @@ export async function GET(request: NextRequest, { params }: { params: { roomId: 
                         id: 'UNKNOWN',
                         serverId: 'UNKNOWN',
                         roomName: 'UNKNOWN'
-                    };
+                    },
                 };
     
                 returnMessages.push(messageToAppend);

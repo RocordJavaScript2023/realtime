@@ -1,34 +1,92 @@
 import MessageDTO from "@/lib/types/dto/message-dto";
 import { RoomDTO } from "@/lib/types/dto/room-dto";
-import { MessageEvent } from "@/lib/types/events/message-event";
+import { MESSAGE_FROM_SERVER_EVENT, MessageEvent } from "@/lib/types/events/message-event";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import MessageBubble from "./message-bubble.component";
+import { v4 as uuid } from 'uuid';
+import { hashSync } from "bcryptjs";
+import ChatInput from "./chat-input.component";
+import { UserDTO } from "@/lib/types/dto/user-dto";
+import { socket } from "@/lib/socket/socket-init";
+import { JOIN_ROOM, JoinRoomEvent } from "@/lib/types/events/join-room-event";
+import { LEAVE_ROOM_EVENT, LeaveRoomEvent } from "@/lib/types/events/leave-room-event";
 
 export default function ChatWindow({
   chatName,
-  currentVal,
-  typingStatus,
-  messageEvents,
   currentRoom,
-  onChange,
-  onKeyDown,
+  currentUser,
 }: {
   chatName: string;
-  currentVal: string;
-  typingStatus: string;
-  messageEvents: MessageEvent[];
   currentRoom: RoomDTO;
-  onChange: (event: React.FormEvent<HTMLInputElement>) => void;
-  onKeyDown: (event: React.KeyboardEvent<HTMLInputElement>) => void;
+  currentUser: UserDTO;
 }) {
   const [loadedMessages, setLoadedMessages]: [
     MessageDTO[],
     Dispatch<SetStateAction<MessageDTO[]>>
   ] = useState(new Array<MessageDTO>());
 
+
+  // re-load messages on room switch
   useEffect(() => {
+
+    console.log('ROOM CHANGED RELOADING MESSAGES ...');
+
+    console.log('Sending Request to join new room');
+    const joinRoomRequest: JoinRoomEvent = {
+      roomToJoin: currentRoom,
+      user: currentUser
+    }
+
+    socket.emit(JOIN_ROOM, joinRoomRequest);
+
+    fetch(`/api/message/room/${currentRoom.id}`, {
+      method: 'GET',
+    }).then((response: Response) => {
+      if (response.status === 200) {
+        response.json().then((value: any) => {
+          console.log('Retrieved new Messages');
+          console.log("OLD MESSAGES:")
+          console.log(loadedMessages);
+          const transmittedMessages: MessageDTO[] = value.data as MessageDTO[];
+          console.log("NEW MESSAGES:")
+          console.log(transmittedMessages);
+          setLoadedMessages((old: MessageDTO[]) => {
+            return transmittedMessages;
+          });
+
+        }).catch((reason: any) => {
+          alert(`UNABLE TO PARSE JSON BODY! REASON: ${reason}`);
+        })
+      }
+    }).catch((reason: any) => {
+      alert(`UNABLE TO LOAD MESSAGES FOR CURRENT ROOM! REASON: ${reason}`);
+    })
+
+  }, [currentRoom, currentUser])
+
+  useEffect(() => {
+
+    // handle incoming Message Events
+    function handleIncomingMessages(event: MessageEvent) {
+      console.log('MESSAGE INCOMING FROM SERVER');
+      setLoadedMessages((old: MessageDTO[]) => {
+        return [...old, event.message];
+      });
+    }
+
+    const joinRoomRequest: JoinRoomEvent = {
+      roomToJoin: currentRoom,
+      user: currentUser,
+    }
+
+    socket.on(MESSAGE_FROM_SERVER_EVENT, handleIncomingMessages);
+
+    socket.emit(JOIN_ROOM, joinRoomRequest);
+
+
     // fetch messages for room
-    if (loadedMessages.length === 0) {
+    if (loadedMessages.length === 0 && currentRoom) {
+
       fetch(`/api/message/room/${currentRoom.id}`, {
         method: "GET",
       })
@@ -39,7 +97,9 @@ export default function ChatWindow({
               .then((value: any) => {
                 const transmittedMessages: MessageDTO[] =
                   value.data as MessageDTO[];
-                setLoadedMessages((old) => transmittedMessages);
+                setLoadedMessages((old: MessageDTO[]) => {
+                  return transmittedMessages;
+                });
               })
               .catch((reason: any) => {
                 alert(
@@ -54,32 +114,16 @@ export default function ChatWindow({
           );
         });
     }
-  }, []);
 
-  useEffect(() => {
-    function mergeAndSortMessages(oldMessages: MessageDTO[]) {
-      const newMergedMessages = new Array<MessageDTO>();
-
-      for (const message of oldMessages) {
-        newMergedMessages.push(message);
+    return () => {
+      const leaveRoomRequest: LeaveRoomEvent = {
+        roomToLeave: currentRoom,
+        user: currentUser,
       }
-
-      for (const messageEvent of messageEvents) {
-        newMergedMessages.push(messageEvent.message);
-      }
-
-      newMergedMessages.sort((a: MessageDTO, b: MessageDTO) => {
-        return b.createdAt.getTime() - a.createdAt.getTime();
-      });
-
-      return newMergedMessages;
+      socket.emit(LEAVE_ROOM_EVENT, leaveRoomRequest);
+      socket.off(MESSAGE_FROM_SERVER_EVENT, handleIncomingMessages);
     }
-
-    setLoadedMessages((oldMessages) => {
-      return mergeAndSortMessages(oldMessages);
-    });
-
-  }, [messageEvents]);
+  }, []);
 
   return (
     <div className="chat">
@@ -87,18 +131,11 @@ export default function ChatWindow({
       <div className="message-bubble-wrapper">{
         loadedMessages.map((message: MessageDTO) => {
             return (
-                <MessageBubble key={message.content} message={message} />
+                <MessageBubble key={hashSync(uuid())} message={message} />
             )
         })
       }</div>
-      <div className="typing-indicator">{typingStatus}</div>
-      <input
-        type="text"
-        placeholder="Type your message here"
-        value={currentVal}
-        onChange={onChange}
-        onKeyDown={onKeyDown}
-      />
+      <ChatInput updateMessageFn={setLoadedMessages} currentUser={currentUser} currentRoom={currentRoom} />
     </div>
   );
 }

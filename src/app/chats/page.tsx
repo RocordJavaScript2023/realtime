@@ -5,12 +5,10 @@ import ChatsComponent from "@/components/chats.component";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { socket } from "@/lib/socket/socket-init";
 import { BROADCAST_MESSAGE_EVENT, BroadcastMessageEvent } from "@/lib/types/events/broadcast-message-event";
-import { CONNECT, CONNECTION_EVENT, ConnectionEventMessage, DISCONNECT } from "@/lib/types/events/connection-event";
-import { JOIN_ROOM, JoinRoomEvent, JoinedRoomEvent } from "@/lib/types/events/join-room-event";
-import { LEAVE_ROOM_EVENT, LeaveRoomEvent, LeftRoomEvent } from "@/lib/types/events/leave-room-event";
+import { CONNECT, DISCONNECT } from "@/lib/types/events/connection-event";
+import { JOIN_ROOM, JoinRoomEvent } from "@/lib/types/events/join-room-event";
 import { RoomDTO } from "@/lib/types/dto/room-dto";
-import { MESSAGE_FROM_CLIENT_EVENT, MESSAGE_FROM_SERVER_EVENT } from "@/lib/types/events/message-event";
-import { Socket } from "socket.io-client";
+import { MESSAGE_FROM_SERVER_EVENT } from "@/lib/types/events/message-event";
 import beehive  from './../../animations/beehive-loader.json';
 import Lottie from "react-lottie-player";
 import { UserDTO } from "@/lib/types/dto/user-dto";
@@ -29,13 +27,6 @@ export default function Chats() {
   // pass it on to it's children via props.
   const [isConnected, setIsConnected]: [boolean, Dispatch<SetStateAction<boolean>>] = useState(socket.connected);
   const [currentUser, setCurrentUser]: [UserDTO, Dispatch<SetStateAction<UserDTO>>] = useState({ id: 'UNKNOWN', name: 'UNKNOWN', email: 'UNKNOWN', picture: 'UNKNOWN'});
-  const [messageEvents, setMessageEvents]: [MessageEvent[], Dispatch<SetStateAction<MessageEvent[]>>] = useState(new Array<MessageEvent>());
-  const [broadCastEvents, setBroadCastEvents]: [BroadcastMessageEvent[], Dispatch<SetStateAction<BroadcastMessageEvent[]>>] = useState(new Array<BroadcastMessageEvent>());
-  const [connectionEvents, setConnectionEvents]: [ConnectionEventMessage[], Dispatch<SetStateAction<ConnectionEventMessage[]>>] = useState(new Array<ConnectionEventMessage>());
-  const [joinRoomEvents, setJoinRoomEvents]: [JoinRoomEvent[], Dispatch<SetStateAction<JoinRoomEvent[]>>] = useState(new Array<JoinRoomEvent>());
-  const [joinedRoomEvents, setJoinedRoomEvents]: [JoinedRoomEvent[], Dispatch<SetStateAction<JoinedRoomEvent[]>>] = useState(new Array<JoinedRoomEvent>());
-  const [leaveRoomEvents, setLeaveRoomEvents]: [LeaveRoomEvent[], Dispatch<SetStateAction<LeaveRoomEvent[]>>] = useState(new Array<LeaveRoomEvent>());
-  const [leftRoomEvents, setLeftRoomEvents]: [LeftRoomEvent[], Dispatch<SetStateAction<LeftRoomEvent[]>>] = useState(new Array<LeftRoomEvent>());
   const [roomArray, setRoomArray]: [RoomDTO[], Dispatch<SetStateAction<RoomDTO[]>>] = useState(new Array<RoomDTO>());
   const router = useRouter();
 
@@ -104,21 +95,9 @@ export default function Chats() {
       setIsConnected(false);
     }
 
-    // receive Messages from the server
-    function handleMessageEventFromServerToClient(event: MessageEvent) {
-      setMessageEvents(previousMessageEvents => [...previousMessageEvents, event]);
-    }
-
-    // receive BroadCasts from the server
-    function handleBroadCastEventsFromServer(event: BroadcastMessageEvent) {
-      setBroadCastEvents(previousBroadCastEvents => [...previousBroadCastEvents, event]);
-    }
-
     // configure the logic for the socket-connection.
     socket.on(CONNECT, onConnect);
     socket.on(DISCONNECT, onDisconnect);
-    socket.on(MESSAGE_FROM_SERVER_EVENT, (event: MessageEvent) => handleMessageEventFromServerToClient(event));
-    socket.on(BROADCAST_MESSAGE_EVENT, (event: BroadcastMessageEvent) => handleBroadCastEventsFromServer(event));
 
     if (roomArray.length !== 0) {
       for (const room of roomArray) {
@@ -142,8 +121,6 @@ export default function Chats() {
       // Cleanup
       socket.off(CONNECT, onConnect);
       socket.off(DISCONNECT, onDisconnect);
-      socket.off(MESSAGE_FROM_SERVER_EVENT, handleMessageEventFromServerToClient)
-      socket.off(BROADCAST_MESSAGE_EVENT, handleBroadCastEventsFromServer);
 
       // If we need to close the socket.io client when the component is unmounted,
       // for example if the connection is only needed in a specific part of our application,
@@ -160,7 +137,7 @@ export default function Chats() {
         <div className="app">
           <Content
             title={pageName}
-            component={<ChatsComponent connectionStatus={isConnected} messageEvents={messageEvents} currentUser={currentUser} roomArray={roomArray} itemsPerPage={8} searchTerm=""/>}
+            component={<ChatsComponent currentUser={currentUser} roomArray={roomArray} itemsPerPage={8} searchTerm=""/>}
           />
         </div>
       </div>

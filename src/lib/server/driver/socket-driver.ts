@@ -44,11 +44,12 @@ export class SocketDriver implements SocketDriverInterface<socketio.Server, Prom
     }
 
     async handleTypingEvent(event: TypingEvent, socket: socketio.Socket): Promise<void> {
-        socket.to(event.room.roomName).emit(TYPING_EVENT, event);
+        console.log(`user: ${event.user.name} is typing ...`)
+        socket.to(event.room.id).emit(TYPING_EVENT, event);
     }
 
     async handleIncomingMessageEvent(event: MessageEvent, socket: socketio.Socket): Promise<void> {
-        
+        console.log(`received a message on: ${socket.id}`);
         // first: persist the new Message
         const messageToPersist = {
             createdAt: event.message.createdAt ?? new Date(),
@@ -79,23 +80,26 @@ export class SocketDriver implements SocketDriverInterface<socketio.Server, Prom
 
         // after the message has been persisted: Emit the message back out to all 
         // clients that are connected to the same room.
-        socket.to(roomInMessage.roomName).emit(MESSAGE_FROM_SERVER_EVENT, event);
+        socket.in(roomInMessage.id).emit(MESSAGE_FROM_SERVER_EVENT, event);
+        console.log(`emitted ${event.message.content} to room: ${roomInMessage.id}`);
     }
 
     async handleJoinRoomEvent(event: JoinRoomEvent, socket: socketio.Socket): Promise<void> {
-        socket.join(event.roomToJoin.roomName);
+        console.log(`client: ${socket.id} requested to join room: ${event.roomToJoin.id}`);
+        socket.join(event.roomToJoin.id);
         const joinedRoomEvent: JoinedRoomEvent = {
             user: event.user,
         }
-        socket.to(event.roomToJoin.roomName).emit(JOINED_ROOM, joinedRoomEvent);
+        console.log(`client ${socket.id} joined to room: ${event.roomToJoin.id}`);
+        socket.in(event.roomToJoin.id).emit(JOINED_ROOM, joinedRoomEvent);
     }
     async handleLeaveRoomEvent(event: LeaveRoomEvent, socket: socketio.Socket): Promise<void> {
-        socket.leave(event.roomToLeave.roomName);
+        socket.leave(event.roomToLeave.id);
         const leftRoomEvent: LeftRoomEvent = {
             user: event.user,
             time: new Date().toISOString(),
         }
-        socket.to(event.roomToLeave.roomName).emit(LEFT_ROOM_EVENT, leftRoomEvent);
+        socket.in(event.roomToLeave.id).emit(LEFT_ROOM_EVENT, leftRoomEvent);
     }
 
 

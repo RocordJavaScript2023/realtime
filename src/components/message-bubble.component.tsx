@@ -2,7 +2,7 @@ import MessageDTO from "@/lib/types/dto/message-dto";
 
 export default function MessageBubble({ message }: { message: MessageDTO }) {
   const userName: string = message.user.name;
-  const sentAt: string = message.createdAt.toDateString();
+  const sentAt: string = new Date(message.createdAt).toDateString();
   const content: string = message.content;
 
   return (
