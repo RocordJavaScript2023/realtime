@@ -15,6 +15,7 @@ import beehive  from './../../animations/beehive-loader.json';
 import Lottie from "react-lottie-player";
 import { UserDTO } from "@/lib/types/dto/user-dto";
 import { MessageEvent } from "@/lib/types/events/message-event";
+import { useRouter } from "next/navigation";
 
 export default function Chats() {
   const pageName = "Chats";
@@ -36,6 +37,7 @@ export default function Chats() {
   const [leaveRoomEvents, setLeaveRoomEvents]: [LeaveRoomEvent[], Dispatch<SetStateAction<LeaveRoomEvent[]>>] = useState(new Array<LeaveRoomEvent>());
   const [leftRoomEvents, setLeftRoomEvents]: [LeftRoomEvent[], Dispatch<SetStateAction<LeftRoomEvent[]>>] = useState(new Array<LeftRoomEvent>());
   const [roomArray, setRoomArray]: [RoomDTO[], Dispatch<SetStateAction<RoomDTO[]>>] = useState(new Array<RoomDTO>());
+  const router = useRouter();
 
   useEffect(() => {
 
@@ -65,7 +67,6 @@ export default function Chats() {
 
     if (currentUser.id === 'UNKNOWN') {
       // fetch the current User based on his Session Data.
-      // TODO: Currently Social Sign On Users are not supported --> Fix this shit!
       fetch('/api/user/current/', {
         method: 'GET',
       }).then((response: Response) => {
@@ -78,14 +79,14 @@ export default function Chats() {
             setCurrentUser(previousCurrentUser => receivedCurrentUser);
 
           } else {
-            alert(`REQUEST FAILED! REASON: ${response.status}`);
+            router.push('/login');
           }
 
         }).catch((reason: any) => {
           alert(`UNABLE TO PARSE JSON-BODY OF RESPONSE! REASON: ${reason}`);
         }) 
       }).catch((reason: any) => {
-        alert(`UNABLE TO FETCH CURRENT USER SESSION! REASON: ${reason}`);
+        router.push('/login');
       })
     }
 
