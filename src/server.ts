@@ -19,7 +19,7 @@ nextServer.prepare().then( async () => {
     // What is CORS? --> https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
     const socketIOWebSocketServer: socketio.Server = await socketDriver.configureEventHandling(new socketio.Server({
         cors: {
-            origin: `http://localhost:${port}`,
+            origin: `http://0.0.0.0:${port}`,
         }
     }));
 
@@ -30,9 +30,7 @@ nextServer.prepare().then( async () => {
     expressServer.all('*', (req: any, res: any) => nextRequestHandler(req, res));
 
     // Start listening for incoming Requests
-    plainHttpServer.listen(port, () => {
-        console.log(`Custom WebSocket Server listening on http://localhost:${port}`);
-    });
+    plainHttpServer.listen(port, '0.0.0.0');
 
 }).catch((reason: any) => {
     console.log("NEXT SERVER WAS UNABLE TO START!!!");

@@ -25,6 +25,14 @@ export default function ChatInput({
   ] = useState("");
 
   useEffect(() => {
+
+    const intervalForTypingIndicator = setInterval(() => {
+      setTypingStatus((old: string) => {
+        return '';
+      })
+    }, 20000);
+
+
     function handleTypingEvent(event: TypingEvent) {
       setTypingStatus((old) => `${event.user.name} is typing ...`);
     }
@@ -33,6 +41,7 @@ export default function ChatInput({
 
     return () => {
       socket.off(TYPING_EVENT, handleTypingEvent);
+      clearInterval(intervalForTypingIndicator);
     };
   }, []);
 
