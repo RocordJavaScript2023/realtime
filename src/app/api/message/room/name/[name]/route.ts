@@ -1,19 +1,21 @@
-import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db/prisma-global";
-import { Message, Room, User } from "@prisma/client";
-import { UserDTO } from "@/lib/types/dto/user-dto";
-import { RoomDTO } from "@/lib/types/dto/room-dto";
 import MessageDTO from "@/lib/types/dto/message-dto";
-import { hashSync } from "bcryptjs";
+import { RoomDTO } from "@/lib/types/dto/room-dto";
+import { UserDTO } from "@/lib/types/dto/user-dto";
+import { Message, Room, User } from "@prisma/client";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(request: NextRequest, { params }: { params: { roomId: string}}): Promise<NextResponse> {
 
-    if (params.roomId !== '') {
+export async function GET(request: NextRequest, { params }: { params: { name: string }}): Promise<NextResponse> {
+
+    const roomName: string = params.name.replaceAll('%20', ' ');
+
+    if (roomName !== '') {
         const returnMessages: MessageDTO[] = new Array<MessageDTO>();
         const foundMessages: Message[] | null = await prisma.message.findMany({
-            where: { 
+            where: {
                 room: {
-                    id: params.roomId
+                    roomName: roomName,
                 }
             }
         });
@@ -21,18 +23,14 @@ export async function GET(request: NextRequest, { params }: { params: { roomId: 
         if (foundMessages !== null && typeof foundMessages !== 'undefined' && foundMessages.length !== 0) {
             for (const element of foundMessages) {
 
-                if (element.roomId !== params.roomId) {
-                    continue;
-                }
-
                 let userDTO: UserDTO | null = null;
-    
-                const associatedUser: User | null = await prisma.user.findUnique(
-                    {
-                        where: { id: element.userId },
-                    },
-                );
-    
+
+                const associatedUser: User | null = await prisma.user.findUnique({
+                    where: {
+                        id: element.userId,
+                    }
+                });
+
                 if (associatedUser !== null && typeof associatedUser !== 'undefined') {
                     userDTO = {
                         id: associatedUser.id,
@@ -42,22 +40,22 @@ export async function GET(request: NextRequest, { params }: { params: { roomId: 
                     };
                 }
 
+                let roomDTO: RoomDTO | null = null;
+
                 const roomUsed: Room | null = await prisma.room.findUnique({
                     where: {
                         id: element.roomId,
                     },
                 });
 
-                let roomDTO: RoomDTO | null = null;
-
                 if (roomUsed !== null && typeof roomUsed !== 'undefined') {
                     roomDTO = {
                         id: roomUsed.id,
                         serverId: roomUsed.serverId,
-                        roomName: roomUsed.roomName
+                        roomName: roomUsed.roomName,
                     };
                 }
-    
+
                 const messageToAppend: MessageDTO = {
                     user: userDTO ?? {
                         id: 'UNKNOWN',
@@ -79,22 +77,17 @@ export async function GET(request: NextRequest, { params }: { params: { roomId: 
 
             return NextResponse.json({
                 status: "200-OK",
-                data: returnMessages,
+                data: returnMessages
             }, {
                 status: 200,
             })
         }
-
-        return NextResponse.json({
-            status: "404-Not-Found",
-        }, {
-            status: 404,
-        });
     }
 
+
     return NextResponse.json({
-        status: "204-No-Content",
+        status: "404-Not-Found",
     }, {
-        status: 204,
-    });
+        status: 404,
+    })
 }

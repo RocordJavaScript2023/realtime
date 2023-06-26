@@ -1,3 +1,4 @@
+import { BroadcastMessageEvent } from "@/lib/types/events/broadcast-message-event";
 import { JoinRoomEvent } from "@/lib/types/events/join-room-event";
 import { LeaveRoomEvent } from "@/lib/types/events/leave-room-event";
 import { MessageEvent } from "@/lib/types/events/message-event";
@@ -16,4 +17,6 @@ export interface SocketDriverInterface<InputType, OutputType> {
     handleJoinRoomEvent(event: JoinRoomEvent, socket: socketio.Socket): void;
 
     handleLeaveRoomEvent(event: LeaveRoomEvent, socket: socketio.Socket): void;
+
+    handleBroadcastEvent(event: BroadcastMessageEvent, socket: socketio.Socket): void;
 }

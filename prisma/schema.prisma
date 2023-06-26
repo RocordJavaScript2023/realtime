@@ -44,7 +44,7 @@ model Room {
   serverId String    
   messages Message[]
   server   Server    @relation(fields: [serverId], references: [id])
-  roomName String
+  roomName String    @unique
 }
 
 // Might not even be necessary.

@@ -11,17 +11,12 @@ import {
 import { TYPING_EVENT, TypingEvent } from "@/lib/types/events/typing-event";
 import ChatWindow from "./chat-window.component";
 
-// Where are the type annotations???
 export default function Chats({
-  connectionStatus,
-  messageEvents,
   currentUser,
   roomArray,
   itemsPerPage,
   searchTerm,
 }: {
-  connectionStatus: boolean;
-  messageEvents: MessageEvent[];
   currentUser: UserDTO;
   roomArray: RoomDTO[];
   itemsPerPage: number;
@@ -29,17 +24,9 @@ export default function Chats({
 }) {
   const [currentPage, setCurrentPage] = useState(1);
   const [chatName, setchatName]: [string, Dispatch<SetStateAction<string>>] =
-    useState("");
+    useState(roomArray[0]?.roomName?? "Default Room");
   const [data, setData]: [RoomDTO[], Dispatch<SetStateAction<RoomDTO[]>>] =
     useState(roomArray);
-  const [currentMessageContent, setCurrentMessageContent]: [
-    string,
-    Dispatch<SetStateAction<string>>
-  ] = useState("");
-  const [typingStatus, setTypingStatus]: [
-    string,
-    Dispatch<SetStateAction<string>>
-  ] = useState("");
 
   const totalPages = Math.ceil(data.length / itemsPerPage);
 
@@ -54,55 +41,13 @@ export default function Chats({
 
   const squares = currentchats.map((item: RoomDTO) => (
     // SonarLint: don't use array index in keys.
-    <div key={item.roomName}>
+    <div key={item.id}>
       <div className="square-2" onClick={() => handlechatClick(item)}>
         {item.roomName}
       </div>
     </div>
   ));
 
-  const handleInput = (event: React.FormEvent<HTMLInputElement>) => {
-    setCurrentMessageContent((previousContent) => event.currentTarget.value);
-  };
-
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === "Escape") {
-      setCurrentMessageContent((prevContent) => "");
-    } else if (event.key === "Enter") {
-      emitMessage(currentMessageContent);
-    } else {
-      const typingEvent: TypingEvent = {
-        user: currentUser,
-        room: roomArray[
-          roomArray.findIndex((room: RoomDTO) => {
-            return room.roomName === chatName;
-          })
-        ],
-      };
-      socket.emit(TYPING_EVENT, typingEvent);
-    }
-  };
-
-  const emitMessage = (messageContent: string) => {
-    if (connectionStatus) {
-      const messageEvent: MessageEvent = {
-        message: {
-          user: currentUser,
-          createdAt: new Date(),
-          content: currentMessageContent,
-          roomUsed:
-            roomArray[
-              roomArray.findIndex((room: RoomDTO) => {
-                return room.roomName === chatName;
-              })
-            ],
-        },
-      };
-
-      socket.timeout(200).emit(MESSAGE_FROM_CLIENT_EVENT, messageEvent);
-      setCurrentMessageContent((prev) => "");
-    }
-  };
 
   // types..
   const handlePageChange = (pageNumber: number) => {
@@ -127,28 +72,6 @@ export default function Chats({
     }
   }, [searchTerm.length, startIndex, currentchats.length]);
 
-  // set up the socket
-  useEffect(() => {
-
-    const intervalForClearingTypingStatus = setInterval(() => {
-      setTypingStatus(old => '');
-    }, 2000);
-
-    function handleTypingEvent(data: TypingEvent) {
-      if (data.room.roomName === chatName) {
-        setTypingStatus(oldStatus => `${data.user.name} is typing`);
-      }
-    }
-
-    socket.on(TYPING_EVENT, (data: TypingEvent) => handleTypingEvent(data));
-
-    // cleanup on unmount
-    return () => {
-      socket.off(TYPING_EVENT, handleTypingEvent);
-      clearInterval(intervalForClearingTypingStatus);
-    }
-  }, [])
-
   return (
     <div>
       <div className="pagination">
@@ -165,12 +88,8 @@ export default function Chats({
       <div className="grid-container-2">{squares}</div>
       <ChatWindow
         chatName={chatName}
-        currentVal={currentMessageContent}
-        typingStatus={typingStatus}
-        messageEvents={messageEvents}
+        currentUser={currentUser}
         currentRoom={roomArray[roomArray.findIndex((room: RoomDTO) => { return room.roomName === chatName; })]}
-        onChange={handleInput}
-        onKeyDown={handleKeyDown}
       />
     </div>
   );
