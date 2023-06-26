@@ -11,6 +11,8 @@ import {
 import { TYPING_EVENT, TypingEvent } from "@/lib/types/events/typing-event";
 import ChatWindow from "./chat-window.component";
 import OpenAIChatWindow from "./openai/open-ai-chat-window.component";
+import { HuggingFaceStream } from "ai";
+import HuggingFaceChat from "./huggingface/huggingface-ai-chat-window.component";
 
 export default function Chats({
   currentUser,
@@ -87,7 +89,7 @@ export default function Chats({
         ))}
       </div>
       <div className="bot-chat-wrapper">
-        <OpenAIChatWindow/>
+        <HuggingFaceChat />
       </div>
       <div className="grid-container-2">{squares}</div>
       <ChatWindow
