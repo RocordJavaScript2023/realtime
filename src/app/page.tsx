@@ -1,14 +1,6 @@
 "use client";
 
-import {
-  LoginButton,
-  LogoutButton,
-  ProfileButton,
-  RegisterButton,
-  RoomButton,
-} from "@/components/buttons.component";
 import { Inter } from 'next/font/google';
-import { User } from '@/components/user.component';
 import Lottie from "react-lottie-player";
 import beehive from '@/animations/beehive-loader.json';
 import { useSession } from "next-auth/react";
