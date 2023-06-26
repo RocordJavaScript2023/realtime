@@ -27,12 +27,16 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({
       status: 200,
       data: mappedRooms
-    })
+    }, {
+      status: 200,
+    });
   } catch (error) {
     console.error(error);
     return NextResponse.json({
       status: 500,
       data: "Internal Server Error"
+    }, {
+      status: 500,
     })
   }
 }
