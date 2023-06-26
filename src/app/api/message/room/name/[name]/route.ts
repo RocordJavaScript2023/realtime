@@ -6,9 +6,9 @@ import { Message, Room, User } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 
 
-export async function GET(request: NextRequest, { params }: { params: { roomName: string }}): Promise<NextResponse> {
+export async function GET(request: NextRequest, { params }: { params: { name: string }}): Promise<NextResponse> {
 
-    const roomName: string = params.roomName.replaceAll('%20', ' ');
+    const roomName: string = params.name.replaceAll('%20', ' ');
 
     if (roomName !== '') {
         const returnMessages: MessageDTO[] = new Array<MessageDTO>();
