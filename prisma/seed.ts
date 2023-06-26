@@ -7,6 +7,7 @@ const prisma = new PrismaClient();
 async function main() {
     
 
+
     const defaultServer = {
         serverName: "defaultServer",
     }
@@ -83,6 +84,12 @@ async function main() {
         content: "First Message: Default Admin says Hi!",
     };
 
+    const secondMessage = {
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        content: "Second Message: Default Admin says Hi",
+    }
+
     const createFirstMessage: Message = await prisma.message.create({
         data: {
             ...firstMessage,
@@ -94,6 +101,22 @@ async function main() {
             room: {
                 connect: {
                     id: createRoom.id,
+                },
+            },
+        },
+    });
+
+    const createSecondMessage: Message = await prisma.message.create({
+        data: {
+            ...secondMessage,
+            user: {
+                connect: {
+                    id: createAdmin.id,
+                },
+            },
+            room: {
+                connect: {
+                    id: createRoom2.id,
                 },
             },
         },
