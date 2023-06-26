@@ -10,6 +10,7 @@ import {
 } from "@/lib/types/events/message-event";
 import { TYPING_EVENT, TypingEvent } from "@/lib/types/events/typing-event";
 import ChatWindow from "./chat-window.component";
+import OpenAIChatWindow from "./openai/open-ai-chat-window.component";
 
 export default function Chats({
   currentUser,
@@ -84,6 +85,9 @@ export default function Chats({
             {index + 1}
           </button>
         ))}
+      </div>
+      <div className="bot-chat-wrapper">
+        <OpenAIChatWindow/>
       </div>
       <div className="grid-container-2">{squares}</div>
       <ChatWindow

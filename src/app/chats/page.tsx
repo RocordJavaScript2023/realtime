@@ -131,7 +131,7 @@ export default function Chats() {
 
   }, []);
 
-  if (isConnected && currentUser.id !== 'UNKNOWN') {
+  if (isConnected && currentUser.id !== 'UNKNOWN' && roomArray.length !== 0) {
     return (
       <div>
         <div className="app">
