@@ -33,15 +33,15 @@ export async function POST(request: NextRequest): Promise<StreamingTextResponse>
     const { messages } = await request.json();
 
     const response = Hf.textGenerationStream({
-        model: 'OpenAssistant/oasst-sft-4-pythia-12b-epoch-3.5',
+        model: process.env.HUGGINGFACE_AI_MODEL ?? 'OpenAssistant/oasst-sft-4-pythia-12b-epoch-3.5',
         inputs: buildOpenAssistantPrompt(messages),
         parameters: {
-            max_new_tokens: 200,
+            max_new_tokens: parseInt(process.env.MAX_NEW_TOKENS ?? "200", 10),
             // @ts-ignore (this is a valid parameter specifically in OpenAssistant models)
-            typical: 0.2,
-            repetition_penalty: 1, 
-            truncate: 1000,
-            return_full_text: false,
+            typical: parseFloat(process.env.TYPICAL ?? "0.2"),
+            repetition_penalty: parseInt(process.env.REPETITION_PENALTY ?? "1", 10), 
+            truncate: parseInt(process.env.TRUNCATE ?? "1000", 10),
+            return_full_text: ((process.env.RETURN_FULL_TEXT ?? "false") === "true"),
         },
     });
 

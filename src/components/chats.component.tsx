@@ -3,15 +3,7 @@ import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import "@/components/css/chats.css";
 import { RoomDTO } from "@/lib/types/dto/room-dto";
 import { UserDTO } from "@/lib/types/dto/user-dto";
-import { socket } from "@/lib/socket/socket-init";
-import {
-  MESSAGE_FROM_CLIENT_EVENT,
-  MessageEvent,
-} from "@/lib/types/events/message-event";
-import { TYPING_EVENT, TypingEvent } from "@/lib/types/events/typing-event";
 import ChatWindow from "./chat-window.component";
-import OpenAIChatWindow from "./openai/open-ai-chat-window.component";
-import { HuggingFaceStream } from "ai";
 import HuggingFaceChat from "./huggingface/huggingface-ai-chat-window.component";
 
 export default function Chats({
