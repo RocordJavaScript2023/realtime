@@ -1,5 +1,5 @@
 .bot-assistant {
-    position: fixed;
+    position: relative;
     display: flex;
     flex-direction: column;
     right: 2%;
