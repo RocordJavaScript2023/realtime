@@ -22,17 +22,7 @@ export default async function Home() {
 
   const router: AppRouterInstance = useRouter();
 
-  const {data: session, status } = useSession({
-    required: true,
-    onUnauthenticated() {
-        router.push('/login');
-    },
-  });
-
-  useEffect(() => {
-    router.prefetch('/login');
-    router.prefetch('/chats');
-  }, []);
+  const {data: session, status } = useSession();
 
   if (status === 'loading') {
     return (
@@ -42,7 +32,10 @@ export default async function Home() {
         </div>
       </main>
     );
-  } else {
+  } else if (status == 'unauthenticated') {
+    router.push('/login');
+  }
+  else {
     router.push('/chats');
   }
 }
