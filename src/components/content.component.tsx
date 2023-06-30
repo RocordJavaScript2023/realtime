@@ -14,12 +14,13 @@ export default function Content({ title, component }: { title: string, component
 
   return (
     <div className="content">
-      <Sidebar />
+      <Sidebar currentUser={...component.props.currentUser} />
       <Notification />
       <div className="content2">
         <div className="title">
           <h1>{title}</h1>
           <input
+            className="search"
             type="text"
             placeholder="Search..."
             value={searchTerm}

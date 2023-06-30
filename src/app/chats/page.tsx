@@ -131,13 +131,20 @@ export default function Chats() {
 
   }, []);
 
-  if (isConnected && currentUser.id !== 'UNKNOWN') {
+  if (isConnected && currentUser.id !== "UNKNOWN" && roomArray.length !== 0) {
     return (
       <div>
         <div className="app">
           <Content
             title={pageName}
-            component={<ChatsComponent currentUser={currentUser} roomArray={roomArray} itemsPerPage={8} searchTerm=""/>}
+            component={
+              <ChatsComponent
+                currentUser={currentUser}
+                roomArray={roomArray}
+                itemsPerPage={8}
+                searchTerm=""
+              />
+            }
           />
         </div>
       </div>

@@ -23,10 +23,11 @@ export default function Chats({
   searchTerm: string;
 }) {
   const [currentPage, setCurrentPage] = useState(1);
-  const [chatName, setchatName]: [string, Dispatch<SetStateAction<string>>] =
-    useState(roomArray[0]?.roomName?? "Default Room");
+  const [chatName, setChatName]: [string, Dispatch<SetStateAction<string>>] =
+    useState(roomArray[0]?.roomName ?? "Default Room");
   const [data, setData]: [RoomDTO[], Dispatch<SetStateAction<RoomDTO[]>>] =
     useState(roomArray);
+  const [showForm, setShowForm] = useState(false);
 
   const totalPages = Math.ceil(data.length / itemsPerPage);
 
@@ -48,7 +49,6 @@ export default function Chats({
     </div>
   ));
 
-
   // types..
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage((prevPageNumber) => pageNumber);
@@ -56,7 +56,59 @@ export default function Chats({
 
   // types...
   const handlechatClick = (chat: RoomDTO) => {
-    setchatName((prevChat) => chat.roomName);
+    setChatName((prevChat) => chat.roomName);
+  };
+
+  const handleDeleteClick = (roomNumber) => {
+    const shouldDelete = window.confirm(
+      `Do you want to delete room ${roomNumber}?`
+    );
+    if (shouldDelete) {
+      const newData = data.filter((room) => room !== roomNumber);
+      setData(newData);
+      const newTotalPages = Math.ceil(newData.length / itemsPerPage);
+      if (newTotalPages < totalPages) {
+        setCurrentPage(Math.min(currentPage, newTotalPages));
+      }
+    }
+  };
+
+  const handleCreateRoom = () => {
+    setShowForm(true);
+    //todo geht das besser?
+    setTimeout(() => {
+      const inputElement = document
+        .getElementById("create-room-input")
+        ?.focus();
+    }, 0);
+  };
+
+  const handleCancel = () => {
+    setShowForm(false);
+    setChatName("");
+  };
+
+  const handleSave = () => {
+    //todo es darf kein Raum mit dem selben Namen existieren
+    if (chatName.trim() !== "") {
+      const newRoom = chatName;
+      //todo post
+      alert("Created Room " + newRoom)
+      const newTotalPages = Math.ceil(data.length / itemsPerPage);
+      if (newTotalPages > totalPages) {
+        setCurrentPage(newTotalPages);
+      }
+      setShowForm(false);
+      setChatName("");
+    }
+  };
+
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      handleSave();
+    } else if (event.key === "Escape") {
+      handleCancel();
+    }
   };
 
   //todo optimieren?
@@ -74,6 +126,24 @@ export default function Chats({
 
   return (
     <div>
+      {!showForm && (
+        <button className="create-room-btn" onClick={handleCreateRoom}>
+          <h2>Create Room</h2>
+        </button>
+      )}
+      {showForm && (
+        <div className="form">
+          <input
+            id="create-room-input"
+            type="text"
+            value={chatName}
+            onChange={(e) => setChatName(e.target.value)}
+            onKeyDown={handleKeyDown}
+          />
+          <button onClick={handleSave}>Save</button>
+          <button onClick={handleCancel}>Cancel</button>
+        </div>
+      )}
       <div className="pagination">
         {Array.from({ length: totalPages }, (_, index) => (
           <button
@@ -89,7 +159,13 @@ export default function Chats({
       <ChatWindow
         chatName={chatName}
         currentUser={currentUser}
-        currentRoom={roomArray[roomArray.findIndex((room: RoomDTO) => { return room.roomName === chatName; })]}
+        currentRoom={
+          roomArray[
+            roomArray.findIndex((room: RoomDTO) => {
+              return room.roomName === chatName;
+            })
+          ]
+        }
       />
     </div>
   );
