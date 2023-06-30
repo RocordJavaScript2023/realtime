@@ -1,13 +1,20 @@
 .content {
   height: 100%;
+  -webkit-box-shadow: 10px 10px 26px -7px rgba(0, 0, 0, 0.45);
+  -moz-box-shadow: 10px 10px 26px -7px rgba(0, 0, 0, 0.45);
+  box-shadow: 10px 10px 26px -7px rgba(0, 0, 0, 0.45);
 }
 
 .content2 {
   position: absolute;
   top: 5rem;
-  left: 23rem;
+  left: 20rem;
   height: 42rem;
   width: 70rem;
+}
+
+.content2 h1 {
+  color: #004fcdc7;
 }
 
 .content3 {

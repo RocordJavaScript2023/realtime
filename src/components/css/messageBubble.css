@@ -1,0 +1,30 @@
+.message-bubble-wrapper {
+  overflow-y: scroll;
+  height: 50vh;
+  margin-left: 2rem;
+}
+
+.message-bubble {
+  margin-bottom: 1.5rem;
+}
+
+.msg {
+  margin: 0;
+}
+
+.message-bubble-current {
+  margin-bottom: 1.5rem;
+  padding-right: 2rem;
+  text-align: right;
+}
+
+.sent-by {
+  margin: 0;
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+}
+
+.sent-at {
+  margin-left: 0.5rem;
+  font-size: 0.8rem;
+}
