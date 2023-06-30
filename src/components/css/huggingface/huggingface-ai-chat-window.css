@@ -1,0 +1,13 @@
+.bot-assistant {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    right: 2%;
+    bottom: 2%;
+    max-width: 5%;
+    max-height: 15%;
+}
+
+.bot-chat-window-content {
+    background-color: red;
+}

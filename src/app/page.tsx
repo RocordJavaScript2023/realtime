@@ -7,15 +7,17 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context";
 import "@/components/css/app.css";
+import { useEffect } from "react";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export default async function Home() {
-  const session = useSession();
 
   const router: AppRouterInstance = useRouter();
 
-  if (session.status === "loading") {
+  const {data: session, status } = useSession();
+
+  if (status === 'loading') {
     return (
       <main>
         <div className="loading-spinner-wrapper">
@@ -28,9 +30,10 @@ export default async function Home() {
         </div>
       </main>
     );
-  } else if (session.status === "unauthenticated") {
-    router.push("/login");
-  } else {
-    router.push("/chats");
+  } else if (status == 'unauthenticated') {
+    router.push('/login');
+  }
+  else {
+    router.push('/chats');
   }
 }
