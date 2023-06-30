@@ -1,10 +1,10 @@
 "use client";
 import Content from "@/components/content.component";
 import "@/components/css/app.css";
-import FriendsComponent from "@/components/friends.component";
+import UsersComponent from "@/components/users.component";
 
-export default function Friends() {
-  const pageName = "Friends";
+export default function Users() {
+  const pageName = "Users";
   const dataArray = [
     "Friend 1",
     "Friend 2",
@@ -23,14 +23,15 @@ export default function Friends() {
     "Friend 15",
   ];
 
+  //todo userdata übergeben
   return (
-      <div>
-        <div className="app">
-          <Content
-              title={pageName}
-              component={<FriendsComponent data={dataArray} itemsPerPage={15} />}
-          />
-        </div>
+    <div>
+      <div className="app">
+        <Content
+          title={pageName}
+          component={<UsersComponent data={dataArray} itemsPerPage={15} />}
+        />
       </div>
+    </div>
   );
 }
