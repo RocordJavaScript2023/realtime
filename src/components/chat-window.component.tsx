@@ -3,6 +3,7 @@ import { RoomDTO } from "@/lib/types/dto/room-dto";
 import { MESSAGE_FROM_SERVER_EVENT, MessageEvent } from "@/lib/types/events/message-event";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import MessageBubble from "./message-bubble.component";
+import "@/components/css/MessageBubble.css";
 import { v4 as uuid } from 'uuid';
 import { hashSync } from "bcryptjs";
 import ChatInput from "./chat-input.component";
@@ -27,7 +28,7 @@ export default function ChatWindow({
 
 
   // re-load messages on room switch
-  useEffect(() => {
+  useEffect(() => {    
     console.log(`Room changed, trying to fetch data for ${currentRoom.id} - ${currentRoom.roomName}`);
     console.log('ROOM CHANGED RELOADING MESSAGES ...');
 
@@ -132,8 +133,12 @@ export default function ChatWindow({
       <div className="message-bubble-wrapper">{
         loadedMessages.map((message: MessageDTO) => {
             return (
-                <MessageBubble key={hashSync(uuid())} message={message} />
-            )
+              <MessageBubble
+                key={hashSync(uuid())}
+                message={message}
+                currentUser={currentUser}
+              />
+            );
         })
       }</div>
       <ChatInput updateMessageFn={setLoadedMessages} currentUser={currentUser} currentRoom={currentRoom} />

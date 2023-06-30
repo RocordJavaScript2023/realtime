@@ -1,22 +1,15 @@
 "use client";
 
-import {
-  LoginButton,
-  LogoutButton,
-  ProfileButton,
-  RegisterButton,
-  RoomButton,
-} from "@/components/buttons.component";
-import { Inter } from 'next/font/google';
-import { User } from '@/components/user.component';
+import { Inter } from "next/font/google";
 import Lottie from "react-lottie-player";
-import beehive from '@/animations/beehive-loader.json';
+import beehive from "@/animations/beehive-loader.json";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context";
+import "@/components/css/app.css";
 import { useEffect } from "react";
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({ subsets: ["latin"] });
 
 export default async function Home() {
 
@@ -28,7 +21,12 @@ export default async function Home() {
     return (
       <main>
         <div className="loading-spinner-wrapper">
-          <Lottie play loop animationData={beehive} style={{ width: 400, height: 400 }}/>
+          <Lottie
+            play
+            loop
+            animationData={beehive}
+            style={{ width: 400, height: 400 }}
+          />
         </div>
       </main>
     );
