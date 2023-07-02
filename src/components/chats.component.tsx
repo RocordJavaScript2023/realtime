@@ -5,15 +5,19 @@ import { RoomDTO } from "@/lib/types/dto/room-dto";
 import { UserDTO } from "@/lib/types/dto/user-dto";
 import ChatWindow from "./chat-window.component";
 import HuggingFaceChat from "./huggingface/huggingface-ai-chat-window.component";
+import { CreateRoomRequest } from "@/lib/types/request/create-room-request";
+import { json } from "stream/consumers";
 
 export default function Chats({
   currentUser,
   roomArray,
+  setRoomArrayFnc,
   itemsPerPage,
   searchTerm,
 }: {
   currentUser: UserDTO;
   roomArray: RoomDTO[];
+  setRoomArrayFnc: Dispatch<SetStateAction<RoomDTO[]>>;
   itemsPerPage: number;
   searchTerm: string;
 }) {
@@ -54,20 +58,6 @@ export default function Chats({
     setChatName((prevChat) => chat.roomName);
   };
 
-  const handleDeleteClick = (roomNumber) => {
-    const shouldDelete = window.confirm(
-      `Do you want to delete room ${roomNumber}?`
-    );
-    if (shouldDelete) {
-      const newData = data.filter((room) => room !== roomNumber);
-      setData(newData);
-      const newTotalPages = Math.ceil(newData.length / itemsPerPage);
-      if (newTotalPages < totalPages) {
-        setCurrentPage(Math.min(currentPage, newTotalPages));
-      }
-    }
-  };
-
   const handleCreateRoom = () => {
     setShowForm(true);
     //todo geht das besser?
@@ -80,28 +70,56 @@ export default function Chats({
 
   const handleCancel = () => {
     setShowForm(false);
-    setChatName("");
   };
 
-  const handleSave = () => {
-    //todo es darf kein Raum mit dem selben Namen existieren
-    if (chatName.trim() !== "") {
-      const newRoom = chatName;
-      //todo post
-      alert("Created Room " + newRoom)
-      const newTotalPages = Math.ceil(data.length / itemsPerPage);
-      if (newTotalPages > totalPages) {
-        setCurrentPage(newTotalPages);
+  const handleSave = async (e: React.FormEvent<HTMLFormElement>) => {
+    const input = e.currentTarget.elements.namedItem(
+      "creteRoomInput"
+    ) as HTMLInputElement;
+
+    const roomDTOTotransfer: RoomDTO = {
+      id: "",
+      serverId:
+        roomArray[
+          roomArray.findIndex((room: RoomDTO) => {
+            return room.roomName === chatName;
+          })
+        ].serverId,
+      roomName: input.value,
+    };
+
+    const createRoomRequest: CreateRoomRequest = {
+      user: currentUser,
+      roomToCreate: roomDTOTotransfer,
+    };
+
+    try {
+      const res = await fetch("/api/room/create", {
+        method: "POST",
+        body: JSON.stringify(createRoomRequest),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (res.status === 201) {
+        res.json().then((value: any) => {
+          // If response is OK -> Body contains new room
+          const received: RoomDTO = value.data as RoomDTO;
+          setRoomArrayFnc((old: RoomDTO[]) => {
+            return [...old, received];
+          });
+        });
+      } else {
+        alert("Room name must be unique");
       }
-      setShowForm(false);
-      setChatName("");
+    } catch (error: any) {
+      console.log("error");
     }
   };
 
   const handleKeyDown = (event) => {
-    if (event.key === "Enter") {
-      handleSave();
-    } else if (event.key === "Escape") {
+    if (event.key === "Escape") {
       handleCancel();
     }
   };
@@ -127,17 +145,18 @@ export default function Chats({
         </button>
       )}
       {showForm && (
-        <div className="form">
+        <form className="form" onSubmit={handleSave}>
           <input
             id="create-room-input"
+            name="creteRoomInput"
             type="text"
-            value={chatName}
-            onChange={(e) => setChatName(e.target.value)}
             onKeyDown={handleKeyDown}
           />
-          <button onClick={handleSave}>Save</button>
-          <button onClick={handleCancel}>Cancel</button>
-        </div>
+          <button type="submit">Save</button>
+          <button type="button" onClick={handleCancel}>
+            Cancel
+          </button>
+        </form>
       )}
       <div className="pagination">
         {Array.from({ length: totalPages }, (_, index) => (

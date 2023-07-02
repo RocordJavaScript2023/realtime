@@ -143,6 +143,7 @@ export default function Chats() {
                 roomArray={roomArray}
                 itemsPerPage={8}
                 searchTerm=""
+                setRoomArrayFnc={setRoomArray}
               />
             }
           />
