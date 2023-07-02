@@ -29,7 +29,7 @@ export default function Users() {
       <div className="app">
         <Content
           title={pageName}
-          component={<UsersComponent data={dataArray} itemsPerPage={15} />}
+          component={<UsersComponent searchTerm="" data={dataArray} itemsPerPage={15} />}
         />
       </div>
     </div>

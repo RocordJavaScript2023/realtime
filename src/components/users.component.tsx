@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import "@/components/css/users.css";
 
+// tf? why is this component called chats?
 export default function Chats({ data: initialData, itemsPerPage, searchTerm }) {
   const [currentPage, setCurrentPage] = useState(1);
   const [chatName, setchatName] = useState("");

@@ -58,6 +58,20 @@ export default function Chats({
     setChatName((prevChat) => chat.roomName);
   };
 
+  const handleDeleteClick = (roomNumber: string) => {
+    const shouldDelete = window.confirm(
+      `Do you want to delete room ${roomNumber}?`
+    );
+    if (shouldDelete) {
+      const newData = data.filter((room: RoomDTO) => room.id !== roomNumber);
+      setData(newData);
+      const newTotalPages = Math.ceil(newData.length / itemsPerPage);
+      if (newTotalPages < totalPages) {
+        setCurrentPage(Math.min(currentPage, newTotalPages));
+      }
+    }
+  };
+
   const handleCreateRoom = () => {
     setShowForm(true);
     //todo geht das besser?
@@ -118,7 +132,7 @@ export default function Chats({
     }
   };
 
-  const handleKeyDown = (event) => {
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Escape") {
       handleCancel();
     }
