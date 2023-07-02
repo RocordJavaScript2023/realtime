@@ -7,11 +7,11 @@
 }
 
 .square-3 {
-  background-color: #9a9a9a;
   padding: 10px;
   text-align: center;
   width: 22rem;
   height: 2rem;
+  color: #0646aa;
 }
 
 .square-3:hover {
@@ -21,10 +21,25 @@
 
 .pagination {
   margin-bottom: 0.5rem;
+  border-bottom: 0.1rem solid #5692f0ab;
 }
 
 .pagination button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   margin: 0.25rem;
+  background-color: transparent;
+  border-radius: 50%;
+  height: 1.5rem;
+  width: 1.5rem;
+  outline: none;
+  color: #5692f0;
+  border: none;
+  font-size: 1.2rem;
+}
+.pagination button:hover {
+  background-color: #5691f040;
 }
 
 .active {

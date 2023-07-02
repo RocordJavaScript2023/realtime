@@ -1,13 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Session, getServerSession } from "next-auth";
-import { FrontendUser } from "@/lib/types/frontend-user.type";
-import { FrontendMapper } from "@/lib/util/map/frontend-mapper";
+import { UserDTO } from "@/lib/types/dto/user-dto";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { prisma } from "@/lib/db/prisma-global";
 import { User } from "@prisma/client";
 import { JWT, getToken } from "next-auth/jwt";
 
-function validUserSession(session: { user: FrontendUser } | null | undefined, token: JWT | null): Boolean {
+function validUserSession(session: { user: UserDTO } | null | undefined, token: JWT | null): Boolean {
 
     // TODO: unsecure, validate the session at least.
     if(session !== null && typeof session !== 'undefined') {
@@ -31,7 +30,7 @@ function validUserSession(session: { user: FrontendUser } | null | undefined, to
  */
 export async function GET(request: NextRequest,{ params }: {params: { mail: string }}) : Promise<NextResponse> {
 
-    const session: {user: FrontendUser} | null = await getServerSession(authOptions);
+    const session: {user: UserDTO} | null = await getServerSession(authOptions);
     const token: JWT | null = await getToken({ req: request });
     const hashedUserId = params.mail;
 

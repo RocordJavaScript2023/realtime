@@ -1,10 +1,11 @@
 import NextAuth from "next-auth/next";
 import { authOptions } from "@/lib/auth/authoptions";
+import { AuthOptions } from "next-auth";
 
 /**
  * This creates an API handler
  */
-const handler = NextAuth(authOptions);
+const handler = NextAuth(authOptions as AuthOptions);
 
 
 /**

@@ -50,7 +50,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     // default Server extrahieren
     const defaultServer: Server | null = await prisma.server.findFirst();
 
-    const createdUser: User = await prisma.user.create({
+    const user: User = await prisma.user.create({
       data: {
         name: newUserToCreate.name,
         picture: extractedPicturePath,
