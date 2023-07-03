@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/db/prisma-global";
-import {hash, hashSync} from "bcryptjs";
+import { hashSync} from "bcryptjs";
 import {NextRequest, NextResponse} from "next/server";
 import {Server, User} from "@prisma/client";
 
@@ -27,7 +27,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     }*/
 
 
-  const userFromBody: CreateUserRequestDTO = await (await req.json() as CreateUserRequestDTO);
+  const userFromBody: CreateUserRequestDTO = (await req.json() as CreateUserRequestDTO);
 
   // Wurde user wirklich mitgeschickt?
   if (userFromBody !== null && typeof userFromBody !== 'undefined'){
@@ -60,16 +60,16 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         servers: {
           // server verlinken
           connect: {
-            id: defaultServer.id ?? "0",
+            id: defaultServer?.id ?? "0",
           },
         },
       },
     });
     // EDIT!
-    if (createdUser !== null) {
+    if (user !== null) {
       return NextResponse.json({
         status: "201-CREATED",
-        data: createdUser,
+        data: newUserToCreate,
       }, {
         status: 201
       });
