@@ -50,11 +50,11 @@ export const LoginForm = () => {
     setFormValues({ ...formValues, [name]: value });
   };
 
-    const handleRegisterButtonClick = () => {
-      if (!loading) {
-        router.push("/register");
-      }
-    };
+  const handleRegisterButtonClick = () => {
+    if (!loading) {
+      router.push("/register");
+    }
+  };
 
   return (
     <div className="container">
@@ -91,8 +91,9 @@ export const LoginForm = () => {
           className="button"
           disabled={loading}
           onClick={handleRegisterButtonClick}
+          style={{ marginTop: "12px" }}
         >
-          {loading ? "Loading..." : "Register"}
+          {"Register"}
         </button>
 
         <div className="divider">
