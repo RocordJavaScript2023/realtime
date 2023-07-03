@@ -57,7 +57,7 @@ export const LoginForm = () => {
    * This allows us to dynamically redirect the user to the appropriate page
    * after successful authentication, rather than hardcoding a specific URL.
    */
-  const callbackUrl = searchParams?.get("callBackUrl") || "/profile";
+  const callbackUrl = searchParams?.get("callBackUrl") || "/chats";
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

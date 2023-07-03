@@ -10,7 +10,14 @@ export async function middleware(request: NextRequest) {
     return cookie.name === 'next-auth.session-token';
   });
 
-  if (nextAuthSessionToken !== null && typeof nextAuthSessionToken !== 'undefined') {
+  const nextAuthCSRFToken: RequestCookie | undefined = request.cookies.getAll().find((cookie: RequestCookie) => {
+    return cookie.name === 'next-auth.csrf-token';
+  });
+
+  const hasSessionToken: boolean = (nextAuthSessionToken !== null && typeof nextAuthSessionToken !== 'undefined');
+  const hasAuthCSRFToken: boolean = (nextAuthCSRFToken !== null && typeof nextAuthCSRFToken !== 'undefined');
+
+  if (hasSessionToken || hasAuthCSRFToken) {
 
     return NextResponse.next();
   }
@@ -30,5 +37,11 @@ export const config = {
     '/api/session/:path*',
     '/api/user/:path*',
     '/api/completion/:path*',
+    '/api/openai/:path*',
+    '/api/huggingface/:path*',
+    '/users/',
+    '/chats',
+    '/profile',
+    '/settings/',
   ],
 }

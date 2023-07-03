@@ -49,11 +49,16 @@ const Header = () => {
   );
   */
   return (
-    <header className="bg-ct-blue-600 text-white py-4">
-      <div className="flex justify-center items-center h-20">
-        <h1 className="text-2xl font-bold font-mdoerner">Realtime</h1>
-      </div>
-    </header>
+    <h1
+      style={{
+        textAlign: "center",
+        marginTop: "2rem",
+        color: "white",
+        fontSize: "4rem",
+      }}
+    >
+      Realtime
+    </h1>
   );
 };
 

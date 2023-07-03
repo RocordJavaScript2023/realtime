@@ -1,13 +1,52 @@
+.bot-chat-wrapper {
+  position: absolute;
+  right: -1rem;
+  bottom: 0rem;
+}
+
 .bot-assistant {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    right: 2%;
-    bottom: 2%;
-    max-width: 5%;
-    max-height: 15%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  right: 2%;
+  bottom: 2%;
+  max-width: 5%;
+  max-height: 15%;
+  cursor: pointer;
 }
 
 .bot-chat-window-content {
-    background-color: red;
+  position: absolute;
+  right: 2rem;
+  bottom: 9rem;
+  width: 28rem;
+  height: 15rem;
+  border: 0.1rem solid #0000ff2b;
+  border-radius: 0.2rem;
+  background: white;
+}
+
+.bot-chat-window-messages {
+  overflow-y: scroll;
+  height: 12rem;
+  margin-left: 0.3rem;
+  margin-top: 0.5rem;
+  cursor: default;
+}
+
+.bot-chat-window-messages form {
+  position: absolute;
+  bottom: 0.5rem;
+  right: 1rem;
+}
+
+.bot-chat-window-messages input {
+  margin-left: 0.5rem;
+  border: 1px solid #ccc;
+  outline: none;
+  width: 21rem;
+}
+
+.bot-chat-window-messages button {
+  margin-left: 0.5rem;
 }

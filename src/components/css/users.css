@@ -46,6 +46,10 @@
   background: rgb(176, 176, 176);
 }
 
+.user-profile-picture {
+  position: relative;
+}
+
 button:hover {
   cursor: pointer;
   opacity: 0.8;

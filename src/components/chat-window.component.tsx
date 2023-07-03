@@ -3,7 +3,7 @@ import { RoomDTO } from "@/lib/types/dto/room-dto";
 import { MESSAGE_FROM_SERVER_EVENT, MessageEvent } from "@/lib/types/events/message-event";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import MessageBubble from "./message-bubble.component";
-import "@/components/css/MessageBubble.css";
+import "./css/messageBubble.css";
 import { v4 as uuid } from 'uuid';
 import { hashSync } from "bcryptjs";
 import ChatInput from "./chat-input.component";

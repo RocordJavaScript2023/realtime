@@ -16,7 +16,7 @@ export const LoginForm = () => {
   const [error, setError] = useState("");
 
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl") ?? "/profile";
+  const callbackUrl = searchParams.get("callbackUrl") ?? "/chats";
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -50,11 +50,11 @@ export const LoginForm = () => {
     setFormValues({ ...formValues, [name]: value });
   };
 
-    const handleRegisterButtonClick = () => {
-      if (!loading) {
-        router.push("/register");
-      }
-    };
+  const handleRegisterButtonClick = () => {
+    if (!loading) {
+      router.push("/register");
+    }
+  };
 
   return (
     <div className="container">
@@ -91,8 +91,9 @@ export const LoginForm = () => {
           className="button"
           disabled={loading}
           onClick={handleRegisterButtonClick}
+          style={{ marginTop: "12px" }}
         >
-          {loading ? "Loading..." : "Register"}
+          {"Register"}
         </button>
 
         <div className="divider">

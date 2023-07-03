@@ -2,6 +2,7 @@ import React from "react";
 import Link from "next/link";
 import { UserDTO } from "@/lib/types/dto/user-dto";
 import "@/components/css/sidebar.css";
+import  {LogoutButton} from "@/components/buttons.component";
 
 export default function Sidebar({ currentUser }: { currentUser: UserDTO }) {
   return (
@@ -10,9 +11,9 @@ export default function Sidebar({ currentUser }: { currentUser: UserDTO }) {
         <img src="https://reactjs.org/logo-og.png" alt="React Image" />
         <div className="container">
           <p className="user-data">
-            {currentUser ? currentUser.name : "TODO!!!"}
+            {currentUser ? currentUser.name : ""}
           </p>
-          <p className="status-message">Status message goes here</p>
+          <p className="status-message"></p>
         </div>
       </div>
       <div className="navigation">
@@ -31,7 +32,7 @@ export default function Sidebar({ currentUser }: { currentUser: UserDTO }) {
       </div>
       <div className="bottom-section">
         <div className="logout-button">
-          <button>Log out</button>
+          <LogoutButton></LogoutButton>
         </div>
       </div>
     </div>
