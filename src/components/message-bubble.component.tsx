@@ -1,6 +1,6 @@
 import MessageDTO from "@/lib/types/dto/message-dto";
 import { UserDTO } from "@/lib/types/dto/user-dto";
-import "@/components/css/messageBubble.css";
+import "./css/messageBubble.css";
 
 export default function MessageBubble({
   message,

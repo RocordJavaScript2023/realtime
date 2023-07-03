@@ -1,6 +1,6 @@
 "use client";
 import Content from "@/components/content.component";
-import "@/components/css/app.css";
+import "./../../components/css/app.css";
 import ChatsComponent from "@/components/chats.component";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { socket } from "@/lib/socket/socket-init";
