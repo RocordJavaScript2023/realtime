@@ -42,5 +42,6 @@ export const config = {
     '/users/',
     '/chats',
     '/profile',
+    '/settings/',
   ],
 }
