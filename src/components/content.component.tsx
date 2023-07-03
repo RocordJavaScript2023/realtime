@@ -15,7 +15,6 @@ export default function Content({ title, component }: { title: string, component
   return (
     <div className="content">
       <Sidebar currentUser={...component.props.currentUser} />
-      <Notification />
       <div className="content2">
         <div className="title">
           <h1>{title}</h1>

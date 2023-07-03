@@ -11,9 +11,9 @@ export default function Sidebar({ currentUser }: { currentUser: UserDTO }) {
         <img src="https://reactjs.org/logo-og.png" alt="React Image" />
         <div className="container">
           <p className="user-data">
-            {currentUser ? currentUser.name : "TODO!!!"}
+            {currentUser ? currentUser.name : ""}
           </p>
-          <p className="status-message">Status message goes here</p>
+          <p className="status-message"></p>
         </div>
       </div>
       <div className="navigation">
