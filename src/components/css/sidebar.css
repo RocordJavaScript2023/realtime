@@ -1,5 +1,5 @@
 .sidebar {
-  width: 15rem;
+  width: 12rem;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -10,8 +10,14 @@
   padding-left: 3rem;
 }
 
+.profile {
+  position: relative;
+  left: -1rem;
+}
+
 .profile img {
   position: relative;
+  top: 1rem;
   margin-left: -1rem;
   width: 4rem;
   height: 4rem;
@@ -21,8 +27,8 @@
 
 .container {
   position: relative;
-  top: -2.7rem;
-  left: 2.5rem;
+  top: -2.15rem;
+  left: 2rem;
   display: flex;
   flex-direction: column;
   font-size: 0.9rem;
@@ -32,6 +38,7 @@
 .status-message {
   align-self: flex-start;
   margin: 0;
+  margin-left: 1.5rem;
 }
 
 .navigation {
@@ -41,7 +48,7 @@
 .navigation ul {
   list-style-type: none;
   padding: 0;
-  margin: 0;
+  margin-left: -1.5rem;
 }
 
 .navigation li {

@@ -4,7 +4,6 @@ import "@/components/css/chats.css";
 import { RoomDTO } from "@/lib/types/dto/room-dto";
 import { UserDTO } from "@/lib/types/dto/user-dto";
 import ChatWindow from "./chat-window.component";
-import HuggingFaceChat from "./huggingface/huggingface-ai-chat-window.component";
 import { CreateRoomRequest } from "@/lib/types/request/create-room-request";
 import { json } from "stream/consumers";
 
@@ -165,6 +164,7 @@ export default function Chats({
             name="creteRoomInput"
             type="text"
             onKeyDown={handleKeyDown}
+            style={{ outline: "none" }}
           />
           <button type="submit">Save</button>
           <button type="button" onClick={handleCancel}>
@@ -182,9 +182,6 @@ export default function Chats({
             {index + 1}
           </button>
         ))}
-      </div>
-      <div className="bot-chat-wrapper">
-        <HuggingFaceChat />
       </div>
       <div className="grid-container-2">{squares}</div>
       <ChatWindow
