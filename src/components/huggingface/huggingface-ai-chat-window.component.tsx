@@ -38,14 +38,12 @@ export default function HuggingFaceChat() {
               ))}
 
               <form onSubmit={handleSubmit}>
-                <label>
-                  Talk to your assistant.
-                  <input
-                    className="fixed w-full max-w-md bottom-0 border border-gray-300 rounded mb-8 shadow-xl p-2"
-                    value={input}
-                    onChange={handleInputChange}
-                  />
-                </label>
+                <input
+                  value={input}
+                  type="text"
+                  placeholder="Talk to your assistant..."
+                  onChange={handleInputChange}
+                />
                 <button type="submit">Send</button>
               </form>
             </div>

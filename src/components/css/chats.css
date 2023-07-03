@@ -15,6 +15,7 @@
 }
 
 .search {
+  width: 13.5rem;
   outline: none;
   border: none;
 }
@@ -27,7 +28,7 @@
 .pagination {
   margin-bottom: 0.5rem;
   border-bottom: 0.1rem solid #5692f0ab;
-  width: 16.5rem;
+  width: 14.5rem;
 }
 
 .pagination button {
@@ -60,7 +61,7 @@ button:hover {
 .create-room-btn {
   position: absolute;
   top: -7rem;
-  left: 60rem;
+  right: -18.1rem;
   margin: 0;
   height: 2.5rem;
   width: 10rem;
@@ -90,9 +91,10 @@ button:hover {
   position: absolute;
   top: -3rem;
   left: 18rem;
-  height: 68vh;
-  width: 52rem;
+  height: 70vh;
+  width: 70rem;
   border: 0.1rem solid #0000ff2b;
+  border-radius: 0.2rem;
 }
 
 .chat h1 {
