@@ -5,18 +5,12 @@ import ChatsComponent from "@/components/chats.component";
 import HuggingFaceChat from "@/components/huggingface/huggingface-ai-chat-window.component";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { socket } from "@/lib/socket/socket-init";
-import {
-  BROADCAST_MESSAGE_EVENT,
-  BroadcastMessageEvent,
-} from "@/lib/types/events/broadcast-message-event";
 import { CONNECT, DISCONNECT } from "@/lib/types/events/connection-event";
 import { JOIN_ROOM, JoinRoomEvent } from "@/lib/types/events/join-room-event";
 import { RoomDTO } from "@/lib/types/dto/room-dto";
-import { MESSAGE_FROM_SERVER_EVENT } from "@/lib/types/events/message-event";
-import beehive from "./../../animations/beehive-loader.json";
+import beehive  from './../../animations/beehive-loader.json';
 import Lottie from "react-lottie-player";
 import { UserDTO } from "@/lib/types/dto/user-dto";
-import { MessageEvent } from "@/lib/types/events/message-event";
 import { useRouter } from "next/navigation";
 
 export default function Chats() {
