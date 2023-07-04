@@ -1,9 +1,9 @@
 .grid-container-3 {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   grid-template-rows: repeat(5, 1fr);
-  grid-column-gap: 30px;
-  grid-row-gap: 15px;
+  grid-column-gap: 0px;
+  grid-row-gap: 150px;
 }
 
 .square-3 {
@@ -20,6 +20,7 @@
 }
 
 .pagination {
+  display: inline-flex;
   margin-bottom: 0.5rem;
   border-bottom: 0.1rem solid #5692f0ab;
 }
@@ -44,6 +45,12 @@
 
 .active {
   background: rgb(176, 176, 176);
+}
+
+.user-profile-picture {
+  position: relative;
+  height: 25%;
+  width: 25%;
 }
 
 button:hover {

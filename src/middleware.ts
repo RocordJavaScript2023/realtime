@@ -37,5 +37,11 @@ export const config = {
     '/api/session/:path*',
     '/api/user/:path*',
     '/api/completion/:path*',
+    '/api/openai/:path*',
+    '/api/huggingface/:path*',
+    '/users/',
+    '/chats',
+    '/profile',
+    '/settings/',
   ],
 }

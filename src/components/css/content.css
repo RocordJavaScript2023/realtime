@@ -7,8 +7,8 @@
 
 .content2 {
   position: absolute;
-  top: 5rem;
-  left: 20rem;
+  top: 3rem;
+  left: 18rem;
   height: 42rem;
   width: 70rem;
 }
@@ -17,8 +17,29 @@
   color: #004fcdc7;
 }
 
+.content2 input {
+  padding: 8px;
+  border: 1px solid #ccc;
+  outline: none;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
 .content3 {
   position: relative;
-  margin-top: 1rem;
+  margin-top: 0.8rem;
   height: 33rem;
+}
+
+.content3 form {
+  position: absolute;
+  top: -6.5rem;
+  margin-left: 17.4rem;
+}
+
+.content3 .pagination {
+  display: inline-flex;
+  margin-bottom: 0.5rem;
+  border-bottom: 0.1rem solid #5692f0ab;
+  width: 14.5rem;
 }
