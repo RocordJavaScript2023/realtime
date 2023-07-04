@@ -5,10 +5,13 @@ import "@/components/css/sidebar.css";
 import  {LogoutButton} from "@/components/buttons.component";
 
 export default function Sidebar({ currentUser }: { currentUser: UserDTO }) {
+
+  const userImage = currentUser.picture === '' ? `https://robohash.org/${currentUser.name}` : currentUser.picture;
+
   return (
     <div className="sidebar">
       <div className="profile">
-        <img src="https://reactjs.org/logo-og.png" alt="React Image" />
+        <img src={userImage} alt="User Profile Picture" />
         <div className="container">
           <p className="user-data">
             {currentUser ? currentUser.name : ""}
