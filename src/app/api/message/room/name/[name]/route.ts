@@ -20,7 +20,7 @@ export async function GET(request: NextRequest, { params }: { params: { name: st
             }
         });
 
-        if (foundMessages !== null && typeof foundMessages !== 'undefined' && foundMessages.length !== 0) {
+        if (foundMessages !== null && typeof foundMessages !== 'undefined') {
             for (const element of foundMessages) {
 
                 let userDTO: UserDTO | null = null;
@@ -47,6 +47,18 @@ export async function GET(request: NextRequest, { params }: { params: { name: st
                         id: element.roomId,
                     },
                 });
+
+                // Stop, if the messages retrieved from DB are not for the same room.
+                // Quick and Dirty, i know, but we are running out of time.
+                if (roomUsed?.roomName !== params.name) {
+                    return NextResponse.json({
+                        status: "200-OK",
+                        data: new Array<RoomDTO>(),
+                    }, {
+                        status: 200,
+                    });
+                }
+
 
                 if (roomUsed !== null && typeof roomUsed !== 'undefined') {
                     roomDTO = {

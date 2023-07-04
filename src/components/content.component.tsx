@@ -1,6 +1,5 @@
 "use client";
 import "@/components/css/content.css";
-import Notification from "@/components/notification.component";
 import Sidebar from "@/components/sidebar.component";
 import React, { useState } from "react";
 

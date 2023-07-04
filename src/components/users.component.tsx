@@ -10,9 +10,11 @@ import  { v4 as uuid } from 'uuid';
 export default function UsersComponent({
   searchTerm,
   itemsPerPage,
+  currentUser,
 }: {
   searchTerm: string;
   itemsPerPage: number;
+  currentUser: UserDTO;
 }) {
   const [userData, setUserData]: [
     UserDTO[],
