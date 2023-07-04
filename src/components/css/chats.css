@@ -14,6 +14,10 @@
   color: #0646aa;
 }
 
+.square-2:hover {
+  transform: translateX(0.1rem);
+}
+
 .search {
   width: 13.5rem;
   outline: none;
@@ -26,9 +30,10 @@
 }
 
 .pagination {
+  display: inline-flex;
   margin-bottom: 0.5rem;
   border-bottom: 0.1rem solid #5692f0ab;
-  width: 14.5rem;
+  width: 14.5rem !important;
 }
 
 .pagination button {

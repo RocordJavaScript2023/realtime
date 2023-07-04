@@ -17,6 +17,14 @@
   color: #004fcdc7;
 }
 
+.content2 input {
+  padding: 8px;
+  border: 1px solid #ccc;
+  outline: none;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
 .content3 {
   position: relative;
   margin-top: 0.8rem;
@@ -27,4 +35,11 @@
   position: absolute;
   top: -6.5rem;
   margin-left: 17.4rem;
+}
+
+.content3 .pagination {
+  display: inline-flex;
+  margin-bottom: 0.5rem;
+  border-bottom: 0.1rem solid #5692f0ab;
+  width: 14.5rem;
 }

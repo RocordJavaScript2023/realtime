@@ -1,4 +1,5 @@
 import { UserDTO } from "@/lib/types/dto/user-dto";
+import "@/components/css/userCard.css";
 
 export default function UserCard({ user }: { user: UserDTO }) {
 
@@ -10,7 +11,7 @@ export default function UserCard({ user }: { user: UserDTO }) {
     <div className="user-card">
         <div className="square-3">
             <div className="user-profile-picture-wrapper">
-                <img className="user-profile-picture" src={userImage} width={150} height={150}/>
+                <img className="user-profile-picture" src={userImage}/>
             </div>
             <div className="user-info-wrapper">
                 <div className="user-name-wrapper">
